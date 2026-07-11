@@ -1,8 +1,41 @@
+/// Constantes de API para la aplicación CAI.
+///
+/// Las variables SUPABASE_URL y SUPABASE_ANON_KEY deben ser inyectadas
+/// en tiempo de compilación usando --dart-define:
+///
+///   flutter run \
+///     --dart-define=SUPABASE_URL=https://TU_PROYECTO.supabase.co \
+///     --dart-define=SUPABASE_ANON_KEY=TU_CLAVE_AQUI
+///
+/// Para producción, configura estas variables en el sistema de CI/CD.
 class ApiConstants {
-  // Asegúrate de reemplazar esto en el futuro con dart-define o un .env
-  static const String supabaseUrl = String.fromEnvironment('SUPABASE_URL', defaultValue: 'https://fhugnuhatzcepvhnacsm.supabase.co');
-  static const String supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZodWdudWhhdHpjZXB2aG5hY3NtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NzEyODMsImV4cCI6MjA5ODQ0NzI4M30.3eP6wr17wgW6Dp4ITcU8ub-W68d8jWyePVRdxM8k-as');
-  
-  // Radiolize API o Stream URL
-  static const String radioStreamUrl = 'https://studio20.radiolize.com/listen/radio_adoracion_int/radio.mp3';
+  static const String supabaseUrl = String.fromEnvironment(
+    'SUPABASE_URL',
+    defaultValue: '',
+  );
+
+  static const String supabaseAnonKey = String.fromEnvironment(
+    'SUPABASE_ANON_KEY',
+    defaultValue: '',
+  );
+
+  /// URL del stream de radio de la iglesia
+  static const String radioStreamUrl =
+      'https://studio20.radiolize.com/listen/radio_adoracion_int/radio.mp3';
+
+  /// Valida que las constantes de entorno estén configuradas
+  static void validate() {
+    if (supabaseUrl.isEmpty) {
+      throw StateError(
+        '[ApiConstants] SUPABASE_URL no está configurado. '
+        'Usa --dart-define=SUPABASE_URL=... al compilar.',
+      );
+    }
+    if (supabaseAnonKey.isEmpty) {
+      throw StateError(
+        '[ApiConstants] SUPABASE_ANON_KEY no está configurado. '
+        'Usa --dart-define=SUPABASE_ANON_KEY=... al compilar.',
+      );
+    }
+  }
 }

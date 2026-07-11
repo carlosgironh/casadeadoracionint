@@ -60,7 +60,8 @@ export default function AnunciosPage() {
         .eq('id', selectedAnuncio.id);
 
       if (error) {
-        alert('Error editando anuncio: ' + error.message);
+        console.error('[AnunciosPage] Error editando anuncio:', error);
+        alert('Error al editar el anuncio. Por favor intenta de nuevo.');
       } else {
         closeModal();
         fetchAnuncios();
@@ -75,7 +76,8 @@ export default function AnunciosPage() {
       ]);
 
       if (error) {
-        alert('Error creando anuncio: ' + error.message);
+        console.error('[AnunciosPage] Error creando anuncio:', error);
+        alert('Error al crear el anuncio. Por favor intenta de nuevo.');
       } else {
         closeModal();
         fetchAnuncios();
@@ -87,7 +89,8 @@ export default function AnunciosPage() {
     if (window.confirm('¿Seguro que deseas eliminar este anuncio?')) {
       const { error } = await supabase.from('anuncios').delete().eq('id', id);
       if (error) {
-        alert('Error al eliminar: ' + error.message);
+        console.error('[AnunciosPage] Error al eliminar anuncio:', error);
+        alert('Error al eliminar el anuncio. Por favor intenta de nuevo.');
       } else {
         fetchAnuncios();
       }

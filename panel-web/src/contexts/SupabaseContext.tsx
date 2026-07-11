@@ -1,11 +1,23 @@
 import React, { createContext, useContext } from 'react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// TODO: En producción, usa variables de entorno import.meta.env
-const SUPABASE_URL = 'https://fhugnuhatzcepvhnacsm.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZodWdudWhhdHpjZXB2aG5hY3NtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NzEyODMsImV4cCI6MjA5ODQ0NzI4M30.3eP6wr17wgW6Dp4ITcU8ub-W68d8jWyePVRdxM8k-as';
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  throw new Error(
+    '[SupabaseContext] Las variables de entorno VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY son requeridas. ' +
+    'Crea un archivo .env en panel-web/ con estas variables. Consulta .env.example.'
+  );
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    storage: typeof window !== 'undefined' ? window.sessionStorage : undefined,
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+});
 
 interface SupabaseContextType {
   supabase: SupabaseClient;

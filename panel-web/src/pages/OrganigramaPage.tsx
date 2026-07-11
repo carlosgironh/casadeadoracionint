@@ -12,7 +12,7 @@ export default function OrganigramaPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('usuarios')
-        .select('*')
+        .select('id, nombre_completo, email, nivel, system_role, telefono, whatsapp, username, cedula, activo')
         .order('nivel', { ascending: true });
       
       if (error) throw error;
@@ -104,7 +104,8 @@ export default function OrganigramaPage() {
       setSelectedUser(null);
       refetch();
     } else {
-      alert('Error guardando cambios');
+      console.error('[OrganigramaPage] Error guardando cambios:', error);
+      alert('Error al guardar los cambios. Por favor intenta de nuevo.');
     }
   };
 
@@ -143,7 +144,8 @@ export default function OrganigramaPage() {
       setNewSystemRole('user');
       refetch();
     } catch (err: any) {
-      setCreateError(err.message || 'Error al crear usuario');
+      console.error('[OrganigramaPage] Error al crear usuario:', err);
+      setCreateError('Error al crear el usuario. Verifica los datos e intenta de nuevo.');
     } finally {
       setIsSaving(false);
     }

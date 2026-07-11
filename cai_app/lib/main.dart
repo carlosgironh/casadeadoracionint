@@ -29,6 +29,9 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // Validar que las variables de entorno estén configuradas
+  ApiConstants.validate();
+
   // Inicializar Supabase
   await Supabase.initialize(
     url: ApiConstants.supabaseUrl,

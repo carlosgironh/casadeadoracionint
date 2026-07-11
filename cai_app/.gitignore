@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Scripts de lanzamiento con credenciales locales
+launch_dev.local.sh
+*.local.sh
+
+# Variables de entorno locales
+.env
+.env.local
