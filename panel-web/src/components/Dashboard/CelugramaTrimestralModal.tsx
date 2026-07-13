@@ -189,7 +189,7 @@ export default function CelugramaTrimestralModal({ celula, onClose }: CelugramaT
                   <div className="absolute top-0 left-0 right-0 flex flex-col items-start pr-4 pb-1">
                     <h1 className="text-[20px] font-black tracking-tighter leading-none mb-1">CELULAS CASA DE ADORACION INT</h1>
                     <div className="w-24 mt-1 mx-auto mb-2">
-                      <img src="/logo.png" alt="CAI Logo" className="w-full h-auto grayscale" />
+                      <img src="/logo.png" alt="Casa de Adoracion Int Logo" className="w-full h-auto grayscale" />
                     </div>
                     <div className="w-full mt-auto text-[10px] text-left">
                       <div className="flex mb-1 items-end">

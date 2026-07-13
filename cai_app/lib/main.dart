@@ -17,7 +17,7 @@ void main() async {
     builder: () => MyAudioHandler(),
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.casadeadoracion.cai_app.channel.audio',
-      androidNotificationChannelName: 'Radio CAI',
+      androidNotificationChannelName: 'Radio Casa de Adoracion Int',
       androidNotificationOngoing: true,
       androidStopForegroundOnPause: true,
     ),

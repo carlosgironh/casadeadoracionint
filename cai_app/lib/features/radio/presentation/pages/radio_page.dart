@@ -27,7 +27,7 @@ class _RadioPageState extends State<RadioPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Radio CAI',
+          'Radio Casa de Adoracion Int',
           style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,

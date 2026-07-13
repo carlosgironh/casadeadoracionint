@@ -620,12 +620,12 @@ export default function InformesPage() {
             {/* INICIO FORMATO OFICIAL DE IMPRESIÓN (Márgenes ajustados para A4/Letter) */}
             <div className="p-10 print:p-0 print:pt-8 font-sans bg-white text-black mx-auto" style={{ maxWidth: '21cm' }}>
               <div className="flex justify-between items-center mb-10">
-                <img src="/logo.png" alt="Logo CAI" className="w-28 h-auto object-contain" />
+                <img src="/logo.png" alt="Logo Casa de Adoracion Int" className="w-28 h-auto object-contain" />
                 <div className="text-center">
                   <h1 className="text-[17px] font-semibold mb-3">CASA DE ADORACIÓN</h1>
                   <h2 className="text-[19px] font-bold tracking-wide">APERTURA DE CELULA</h2>
                 </div>
-                <img src="/logo.png" alt="Logo CAI" className="w-28 h-auto object-contain" />
+                <img src="/logo.png" alt="Logo Casa de Adoracion Int" className="w-28 h-auto object-contain" />
               </div>
 
               <div className="space-y-6 text-[13px] uppercase font-semibold leading-relaxed tracking-wide">

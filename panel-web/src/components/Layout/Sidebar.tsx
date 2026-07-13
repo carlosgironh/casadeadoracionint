@@ -16,7 +16,7 @@ export default function Sidebar() {
   return (
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 flex items-center justify-center">
-        <img src="/logo.png" alt="CAI Logo" className="h-20 w-auto" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.insertAdjacentHTML('afterend', '<h1 class="text-xl font-bold text-[#0D509E]">CAI Logo Falta</h1>'); }} />
+        <img src="/logo.png" alt="Casa de Adoracion Int Logo" className="h-20 w-auto" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.insertAdjacentHTML('afterend', '<h1 class="text-xl font-bold text-[#0D509E]">Casa de Adoracion Int Logo Falta</h1>'); }} />
       </div>
       
       <nav className="flex-1 px-4 space-y-2">

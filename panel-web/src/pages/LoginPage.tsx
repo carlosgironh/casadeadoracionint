@@ -119,7 +119,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-[#0D509E]">
-            CAI Secretaría
+            Casa de Adoracion Int
           </h2>
           <p className="mt-2 text-center text-sm text-gray-500">
             Ingresa tus credenciales para acceder al panel administrativo
@@ -145,7 +145,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={!!isLockedOut || loading}
                 className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl text-gray-900 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#5EBBEC] focus:border-[#5EBBEC] sm:text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                placeholder="usuario o ejemplo@cai.com"
+                placeholder="usuario o ejemplo@casadeadoracionint.com"
               />
             </div>
           </div>
