@@ -35,7 +35,7 @@ void main() async {
   // Inicializar Supabase
   await Supabase.initialize(
     url: ApiConstants.supabaseUrl,
-    anonKey: ApiConstants.supabaseAnonKey,
+    publishableKey: ApiConstants.supabaseAnonKey,
   );
 
   // Inicializar inyección de dependencias

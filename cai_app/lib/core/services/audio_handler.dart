@@ -37,7 +37,7 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     });
   }
 
-  Future<void> setStreamUrl(String url, {String title = 'Radio CAI', String artist = 'En Vivo', String? artUri}) async {
+  Future<void> setStreamUrl(String url, {String title = 'Radio Casa de Adoracion Int', String artist = 'En Vivo', String? artUri}) async {
     final mediaItem = MediaItem(
       id: url,
       album: 'Casa de Adoración Internacional',

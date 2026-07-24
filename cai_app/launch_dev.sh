@@ -5,5 +5,5 @@
 # 3. NUNCA commitees launch_dev.local.sh
 
 flutter run \
-  --dart-define=SUPABASE_URL=https://fhugnuhatzcepvhnacsm.supabase.co \
-  --dart-define=SUPABASE_ANON_KEY=REEMPLAZA_CON_LA_NUEVA_CLAVE_ROTADA
+  --dart-define=SUPABASE_URL=https://kkxjgmnmaxswpnbcimld.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtreGpnbW5tYXhzd3BuYmNpbWxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NzEwOTMsImV4cCI6MjA5ODQ0NzA5M30.ikaTjYGKJdTfiskXigmWqHOJAPUXPMv2heWmH6SPdh8

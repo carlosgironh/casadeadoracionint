@@ -1,4 +1,4 @@
-/// Constantes de API para la aplicación CAI.
+/// Constantes de API para la aplicación Casa de Adoracion Int.
 ///
 /// Las variables SUPABASE_URL y SUPABASE_ANON_KEY deben ser inyectadas
 /// en tiempo de compilación usando --dart-define:
