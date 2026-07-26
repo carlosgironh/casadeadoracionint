@@ -803,15 +803,31 @@ fun CelugramaForm(celulaActual: Celula, modifier: Modifier = Modifier) {
     }
 
     if (showAddDialog) {
+        val context = androidx.compose.ui.platform.LocalContext.current
         AddAsistenteDialog(
             categoriaCelula = celulaActual.categoria ?: "General",
             onDismiss = { showAddDialog = false },
-            onAdd = { 
+            onAdd = { asistente ->
                 scope.launch {
                     try {
-                        Supabase.client.from("asistentes_celula").insert(it)
+                        // Validate duplicates
+                        val existingDiscipulo = Supabase.client.from("asistentes_celula").select {
+                            filter {
+                                eq("cedula", asistente.cedula.trim())
+                                eq("lider_id", asistente.lider_id!!)
+                            }
+                        }.decodeList<AsistenteCelula>()
+
+                        if (existingDiscipulo.isNotEmpty()) {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                android.widget.Toast.makeText(context, "Esta persona ya está registrada en tu celugrama", android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                            return@launch
+                        }
+
+                        Supabase.client.from("asistentes_celula").insert(asistente)
                         refreshDiscipulos()
-                        checkedState[it.id] = true // Mark as attended automatically
+                        checkedState[asistente.id] = true // Mark as attended automatically
                         showAddDialog = false
                     } catch(e: Exception) {
                         e.printStackTrace()

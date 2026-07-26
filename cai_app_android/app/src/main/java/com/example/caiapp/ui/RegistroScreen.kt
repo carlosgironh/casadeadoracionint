@@ -136,7 +136,21 @@ fun RegistroScreen(
         
         scope.launch {
             try {
+                // 1. Verificar duplicados en la base de datos
+                val existingUsers = Supabase.client.from("usuarios").select {
+                    filter {
+                        or {
+                            eq("username", username.trim())
+                            eq("cedula", cedula.trim())
+                        }
+                    }
+                }.decodeList<Usuario>()
 
+                if (existingUsers.isNotEmpty()) {
+                    errorMessage = "Error: El nombre de usuario o la cédula ya se encuentran registrados."
+                    isLoading = false
+                    return@launch
+                }
 
                 // 2. Registrar en Supabase Auth
                 val currentEmail = email.trim()
