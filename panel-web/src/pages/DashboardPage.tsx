@@ -49,7 +49,7 @@ export default function DashboardPage() {
       // Asistencia promedio últimas 4 semanas
       const { data: asistenciaHistorial } = await supabase
         .from('informes_celula')
-        .select('fecha_reunion, asistentes')
+        .select('fecha_reunion, asistencia_total')
         .order('fecha_reunion', { ascending: false })
         .limit(20);
 
