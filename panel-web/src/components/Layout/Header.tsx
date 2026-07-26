@@ -6,25 +6,35 @@ export default function Header() {
 
   const getRoleDisplay = (p?: typeof profile) => {
     if (!p) return 'Invitado';
-    if (p.system_role === 'user') {
+    
+    let nivelName = '';
+    if (p.nivel !== undefined && p.nivel !== null) {
       switch (p.nivel) {
-        case 0: return 'Apóstol';
-        case 1: return 'Pastor';
-        case 3: return 'Ministro / Obrero';
-        case 4: return 'Líder de Red';
-        case 5: return 'Líder de Célula';
-        case 6: return 'Miembro';
-        default: return 'Usuario App';
+        case 0: nivelName = 'Apóstol'; break;
+        case 1: nivelName = 'Pastor'; break;
+        case 3: nivelName = 'Ministro / Obrero'; break;
+        case 4: nivelName = 'Líder de Red'; break;
+        case 5: nivelName = 'Líder de Célula'; break;
+        case 6: nivelName = 'Miembro'; break;
+        default: nivelName = ''; break;
       }
     }
+
+    let sysName = '';
     switch (p.system_role) {
-      case 'superadmin': return 'Administrador Principal';
-      case 'admin': return 'Administrador';
-      case 'secretaria': return 'Secretaría';
-      case 'contabilidad': return 'Contabilidad / Finanzas';
-      case 'soporte': return 'Soporte IT';
-      default: return 'Invitado';
+      case 'superadmin': sysName = 'Administrador Principal'; break;
+      case 'admin': sysName = 'Administrador'; break;
+      case 'secretaria': sysName = 'Secretaría'; break;
+      case 'contabilidad': sysName = 'Contabilidad / Finanzas'; break;
+      case 'soporte': sysName = 'Soporte IT'; break;
+      case 'user': sysName = ''; break; // Si es solo user, no mostramos rol de sistema
+      default: sysName = 'Invitado'; break;
     }
+
+    if (nivelName && sysName) {
+      return `${nivelName} / ${sysName}`;
+    }
+    return nivelName || sysName || 'Invitado';
   };
 
   const getInitials = (name?: string) => {

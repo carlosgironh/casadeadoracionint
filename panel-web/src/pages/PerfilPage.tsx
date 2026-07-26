@@ -5,16 +5,37 @@ import { User, Mail, Shield, Award, Phone } from 'lucide-react';
 export default function PerfilPage() {
   const { profile, user } = useAuth();
 
-  const getRoleDisplay = (role?: string) => {
-    switch (role) {
-      case 'superadmin': return 'Administrador Principal (Super Admin)';
-      case 'admin': return 'Administrador';
-      case 'secretaria': return 'Personal de Secretaría';
-      case 'contabilidad': return 'Contabilidad y Finanzas';
-      case 'soporte': return 'Soporte Técnico';
-      case 'user': return 'Usuario Móvil';
-      default: return 'Invitado';
+  const getRoleDisplay = (p?: typeof profile) => {
+    if (!p) return 'Invitado';
+    
+    let nivelName = '';
+    if (p.nivel !== undefined && p.nivel !== null) {
+      switch (p.nivel) {
+        case 0: nivelName = 'Apóstol'; break;
+        case 1: nivelName = 'Pastor'; break;
+        case 3: nivelName = 'Ministro / Obrero'; break;
+        case 4: nivelName = 'Líder de Red'; break;
+        case 5: nivelName = 'Líder de Célula'; break;
+        case 6: nivelName = 'Miembro'; break;
+        default: nivelName = ''; break;
+      }
     }
+
+    let sysName = '';
+    switch (p.system_role) {
+      case 'superadmin': sysName = 'Administrador Principal'; break;
+      case 'admin': sysName = 'Administrador'; break;
+      case 'secretaria': sysName = 'Secretaría'; break;
+      case 'contabilidad': sysName = 'Contabilidad / Finanzas'; break;
+      case 'soporte': sysName = 'Soporte Técnico'; break;
+      case 'user': sysName = ''; break;
+      default: sysName = 'Invitado'; break;
+    }
+
+    if (nivelName && sysName) {
+      return `${nivelName} / ${sysName}`;
+    }
+    return nivelName || sysName || 'Invitado';
   };
 
   const getNivelDisplay = (nivel?: number) => {
@@ -60,7 +81,7 @@ export default function PerfilPage() {
             <h2 className="text-2xl font-bold text-gray-900">{profile.nombre_completo}</h2>
             <p className="text-gray-500 flex items-center mt-1">
               <Shield className="w-4 h-4 mr-1 text-[#0D509E]" />
-              {getRoleDisplay(profile.system_role)}
+              {getRoleDisplay(profile)}
             </p>
           </div>
 
