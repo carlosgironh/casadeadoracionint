@@ -8,8 +8,8 @@ export interface SystemProfile {
   nivel?: number;
   username?: string;
   telefono?: string;
-  fecha_nacimiento?: string;
-  direccion?: string;
+  whatsapp?: string;
+  cedula?: string;
 }
 
 interface AuthContextType {
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const { data, error } = await supabase
           .from('usuarios')
-          .select('system_role, nombre_completo, nivel, username, telefono, fecha_nacimiento, direccion')
+          .select('system_role, nombre_completo, nivel, username, telefono, whatsapp, cedula')
           .eq('id', userId)
           .single();
         

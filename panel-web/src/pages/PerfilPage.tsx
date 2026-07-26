@@ -1,7 +1,6 @@
 import { useAuth } from '../hooks/useAuth';
 import { User, Mail, Shield, Award, Calendar, Phone, MapPin } from 'lucide-react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+
 
 export default function PerfilPage() {
   const { profile, user } = useAuth();
@@ -109,24 +108,22 @@ export default function PerfilPage() {
                 </div>
               )}
 
-              {profile.fecha_nacimiento && (
+              {profile.whatsapp && (
                 <div className="flex items-start space-x-3">
-                  <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Fecha de Nacimiento</p>
-                    <p className="text-gray-900">
-                      {format(new Date(profile.fecha_nacimiento), "d 'de' MMMM 'de' yyyy", { locale: es })}
-                    </p>
+                    <p className="text-sm font-medium text-gray-500">WhatsApp</p>
+                    <p className="text-gray-900">{profile.whatsapp}</p>
                   </div>
                 </div>
               )}
 
-              {profile.direccion && (
+              {profile.cedula && (
                 <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <User className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Dirección</p>
-                    <p className="text-gray-900">{profile.direccion}</p>
+                    <p className="text-sm font-medium text-gray-500">Cédula</p>
+                    <p className="text-gray-900">{profile.cedula}</p>
                   </div>
                 </div>
               )}
