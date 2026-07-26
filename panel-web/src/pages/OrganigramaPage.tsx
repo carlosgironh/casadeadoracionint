@@ -205,14 +205,13 @@ export default function OrganigramaPage() {
   };
 
   // Agrupar usuarios Eclesiásticos (todos por nivel, o tal vez excluir a los que no aplican? No, el usuario dijo separarlo)
-  // Agrupar usuarios Eclesiásticos
-  const niveles = [0, 1, 3, 4, 5, 6];
+  const niveles = [0, 1, 3, 4]; // Limitado hasta Líder de Red para evitar que se congele el navegador
   const adminRoles = ['superadmin', 'admin', 'contabilidad', 'secretaria', 'soporte'];
 
   const usuariosEclesiasticos = (usuarios || []).filter(u => 
     u.nivel !== null && 
     u.nivel >= 0 && 
-    u.nivel <= 6
+    u.nivel <= 4
   );
   const usuariosAdministrativos = (usuarios || []).filter(u => adminRoles.includes(u.system_role));
 
@@ -227,6 +226,13 @@ export default function OrganigramaPage() {
     acc[curr.system_role].push(curr);
     return acc;
   }, {});
+
+  const getInitials = (name?: string) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  };
 
   return (
     <div className="space-y-8">
@@ -276,7 +282,7 @@ export default function OrganigramaPage() {
                         <div key={user.id} className="border border-gray-100 rounded-xl p-3 flex items-start space-x-3 hover:shadow-md transition-shadow bg-white">
                           <div className="w-10 h-10 rounded-full bg-[#f0f7ff] border border-[#d1e6fb] flex items-center justify-center flex-shrink-0">
                             <span className="text-[#0D509E] font-bold text-base">
-                              {user.nombre_completo.charAt(0)}
+                              {getInitials(user.nombre_completo)}
                             </span>
                           </div>
                           <div className="flex-1 min-w-0">
@@ -341,7 +347,7 @@ export default function OrganigramaPage() {
                         <div key={user.id} className="border border-gray-100 rounded-xl p-3 flex items-start space-x-3 hover:shadow-md transition-shadow bg-white">
                           <div className="w-10 h-10 rounded-full bg-[#f0f7ff] border border-[#d1e6fb] flex items-center justify-center flex-shrink-0">
                             <span className="text-[#0D509E] font-bold text-base">
-                              {user.nombre_completo.charAt(0)}
+                              {getInitials(user.nombre_completo)}
                             </span>
                           </div>
                           <div className="flex-1 min-w-0">

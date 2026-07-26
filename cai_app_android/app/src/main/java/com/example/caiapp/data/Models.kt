@@ -99,7 +99,8 @@ data class AsistenteCelula(
     val pos_lanzamiento: Boolean = false,
     val graduado: Boolean = false,
     val dirige_evangelistica: Boolean = false,
-    val dirige_discipulado: Boolean = false
+    val dirige_discipulado: Boolean = false,
+    val usuario_id: String? = null
 )
 
 @Serializable

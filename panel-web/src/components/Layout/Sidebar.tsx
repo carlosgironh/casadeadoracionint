@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, FileText, Users, LogOut, Bell } from 'lucide-react';
+import { LayoutDashboard, BookOpen, FileText, Users, LogOut, Bell, Contact2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function Sidebar() {
@@ -11,6 +11,7 @@ export default function Sidebar() {
     { name: 'Bosquejos', href: '/bosquejos', icon: BookOpen },
     { name: 'Informes', href: '/informes', icon: FileText },
     { name: 'Organigrama', href: '/organigrama', icon: Users },
+    { name: 'Directorio', href: '/lideres', icon: Contact2 },
   ];
 
   return (

@@ -167,6 +167,8 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
     }
 
     fun aprobarLider(liderId: String) {
+        val liderAprobado = lideresFormacion.find { it.id == liderId }
+        val cedulaLider = liderAprobado?.cedula ?: ""
         scope.launch {
             try {
                 Supabase.client.from("usuarios")
@@ -174,6 +176,35 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                         filter { eq("id", liderId) }
                     }
                 
+                // --- Lógica de Aprobación Inteligente ---
+                if (currentUser != null && cedulaLider.isNotBlank()) {
+                    val existentes = Supabase.client.from("asistentes_celula")
+                        .select { filter { eq("cedula", cedulaLider) } }
+                        .decodeList<AsistenteCelula>()
+                    
+                    if (existentes.isNotEmpty()) {
+                        // Ya existe, lo enlazamos y lo asignamos a este líder
+                        val existente = existentes.first()
+                        Supabase.client.from("asistentes_celula").update(
+                            mapOf("usuario_id" to liderId, "lider_id" to currentUser.id)
+                        ) { filter { eq("id", existente.id) } }
+                    } else {
+                        // No existe, creamos uno nuevo enlazado
+                        val nuevoId = java.util.UUID.randomUUID().toString()
+                        Supabase.client.from("asistentes_celula").insert(
+                            AsistenteCelula(
+                                id = nuevoId,
+                                nombre = liderAprobado?.nombre_completo ?: "Desconocido",
+                                cedula = cedulaLider,
+                                whatsapp = liderAprobado?.whatsapp,
+                                lider_id = currentUser.id,
+                                usuario_id = liderId
+                            )
+                        )
+                    }
+                }
+                // ----------------------------------------
+
                 val msg = "¡Felicidades! Tu líder ha aprobado tu cuenta."
                 Supabase.client.from("notificaciones")
                     .insert(NotificacionInsert(usuario_id = liderId, mensaje = msg))
@@ -305,6 +336,21 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                                     Text("Nivel: ${lider.nivel ?: 1}", fontSize = 14.sp, color = Color.Gray)
                                     if (lider.pendiente_aprobacion == true) {
                                         Text("Pendiente de Aprobación", fontSize = 12.sp, color = Color(0xFFD97706), fontWeight = FontWeight.Bold)
+                                    } else {
+                                        val discipuloLider = discipulos.find { it.usuario_id == lider.id || (it.cedula == lider.cedula && !lider.cedula.isNullOrBlank()) }
+                                        if (discipuloLider != null) {
+                                            val clases = listOf(
+                                                discipuloLider.libro_juan to "Juan",
+                                                discipuloLider.bautismo to "Bautismo",
+                                                discipuloLider.seminario_vision to "Visión",
+                                                discipuloLider.liderazgo to "Liderazgo"
+                                            ).filter { it.first }.joinToString(", ") { it.second }
+                                            
+                                            Text(
+                                                "Crecimiento: ${if (clases.isNotEmpty()) clases else "En proceso"}",
+                                                fontSize = 12.sp, color = Color(0xFF00796B), fontWeight = FontWeight.SemiBold
+                                            )
+                                        }
                                     }
                                 }
                                 if (lider.pendiente_aprobacion == true) {

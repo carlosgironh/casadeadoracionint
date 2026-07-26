@@ -10,12 +10,13 @@ import BosquejosPage from './pages/BosquejosPage';
 import InformesPage from './pages/InformesPage';
 import OrganigramaPage from './pages/OrganigramaPage';
 import PerfilPage from './pages/PerfilPage';
+import LideresPage from './pages/LideresPage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutos
+      staleTime: 1000 * 60, // 1 minuto (actualizado para mayor fluidez)
       retry: 2,
     },
   },
@@ -37,6 +38,7 @@ function App() {
                   <Route path="/bosquejos" element={<BosquejosPage />} />
                   <Route path="/informes" element={<InformesPage />} />
                   <Route path="/organigrama" element={<OrganigramaPage />} />
+                  <Route path="/lideres" element={<LideresPage />} />
                   <Route path="/perfil" element={<PerfilPage />} />
                 </Route>
               </Route>

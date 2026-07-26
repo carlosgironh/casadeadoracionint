@@ -27,6 +27,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<SystemProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Idle Timer (30 minutes)
+  const IDLE_TIMEOUT = 1000 * 60 * 30;
+
   useEffect(() => {
     const fetchProfile = async (userId: string) => {
       try {
@@ -66,7 +69,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    return () => subscription.unsubscribe();
+    // --- Idle Timer Logic ---
+    let idleTimeoutId: ReturnType<typeof setTimeout>;
+    const resetIdleTimer = () => {
+      clearTimeout(idleTimeoutId);
+      idleTimeoutId = setTimeout(() => {
+        // Only sign out if user is actually logged in
+        supabase.auth.getSession().then(({ data }) => {
+          if (data.session) {
+            console.log('Logging out due to inactivity');
+            supabase.auth.signOut();
+          }
+        });
+      }, IDLE_TIMEOUT);
+    };
+
+    // Attach event listeners
+    const events = ['mousemove', 'keydown', 'wheel', 'DOMMouseScroll', 'mouseWheel', 'mousedown', 'touchstart', 'touchmove', 'MSPointerDown', 'MSPointerMove'];
+    events.forEach(event => {
+      window.addEventListener(event, resetIdleTimer, { passive: true });
+    });
+    
+    // Start the timer
+    resetIdleTimer();
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(idleTimeoutId);
+      events.forEach(event => {
+        window.removeEventListener(event, resetIdleTimer);
+      });
+    };
   }, [supabase]);
 
   const signOut = async () => {
