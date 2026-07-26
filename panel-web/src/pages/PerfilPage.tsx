@@ -1,5 +1,5 @@
 import { useAuth } from '../hooks/useAuth';
-import { User, Mail, Shield, Award, Calendar, Phone, MapPin } from 'lucide-react';
+import { User, Mail, Shield, Award, Phone } from 'lucide-react';
 
 
 export default function PerfilPage() {
