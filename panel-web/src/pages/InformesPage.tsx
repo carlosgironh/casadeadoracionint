@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { FileText, Printer, X, Eye, Users, Calendar, Filter, Search, CheckSquare, Square } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import CelugramaMensualNinosModal from '../components/Dashboard/CelugramaMensualNinosModal';
 import CelugramaTrimestralModal from '../components/Dashboard/CelugramaTrimestralModal';
 import { Popover, Transition } from '@headlessui/react';
@@ -101,30 +102,47 @@ export default function InformesPage() {
   const [ninosModalCelula, setNinosModalCelula] = useState<Celula | null>(null);
   const [trimestralModalCelula, setTrimestralModalCelula] = useState<Celula | null>(null);
 
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.system_role === 'superadmin' || profile?.system_role === 'admin' || profile?.system_role === 'secretaria';
+
   // Queries
   const { data: informes, isLoading: isLoadingInformes } = useQuery({
-    queryKey: ['informes'],
+    queryKey: ['informes', user?.id, isAdmin],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('informes_celula')
-        .select('*, usuarios(nombre_completo), bosquejos(titulo, versiculo_base)')
+        .select('*, usuarios!informes_celula_lider_id_fkey(nombre_completo, lider_directo_id), bosquejos(titulo, versiculo_base)')
         .order('fecha_reunion', { ascending: false });
 
       if (error) throw error;
-      return data as Informe[];
+      
+      let result = data as any[];
+      if (!isAdmin && user) {
+        result = result.filter(item => 
+          item.lider_id === user.id || item.usuarios?.lider_directo_id === user.id
+        );
+      }
+      return result as Informe[];
     },
   });
 
   const { data: celulas, isLoading: isLoadingCelulas } = useQuery({
-    queryKey: ['celulas'],
+    queryKey: ['celulas', user?.id, isAdmin],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('celulas')
-        .select('*, colider:colider_id(nombre_completo), usuarios!celulas_lider_id_fkey(nombre_completo, plan_felipe, capacitacion, ministerio, lider_directo:lider_directo_id(nombre_completo), equipo_lider:equipo_lider_id(nombre), redes:red_asignada_id(nombre))')
+        .select('*, colider:colider_id(nombre_completo), usuarios!celulas_lider_id_fkey(nombre_completo, plan_felipe, capacitacion, ministerio, lider_directo_id, lider_directo:lider_directo_id(nombre_completo), equipo_lider:equipo_lider_id(nombre), redes:red_asignada_id(nombre))')
         .order('fecha_apertura', { ascending: false });
 
       if (error) throw error;
-      return data as Celula[];
+      
+      let result = data as any[];
+      if (!isAdmin && user) {
+        result = result.filter(item => 
+          item.lider_id === user.id || item.usuarios?.lider_directo_id === user.id
+        );
+      }
+      return result as Celula[];
     },
   });
 

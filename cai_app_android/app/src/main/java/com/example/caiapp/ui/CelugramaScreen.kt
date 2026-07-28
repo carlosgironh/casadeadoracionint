@@ -298,7 +298,7 @@ fun AperturaCelulaForm(onCelulaCreada: (Celula) -> Unit, modifier: Modifier = Mo
                     onExpandedChange = { expandedZonas = !expandedZonas }
                 ) {
                     OutlinedTextField(
-                        value = if (selectedZona != null) "Zona ${selectedZona?.numero_zona ?: ""} - ${selectedZona?.lugares ?: ""}" else "",
+                        value = if (selectedZona != null) selectedZona?.nombre ?: "" else "",
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Zona") },
@@ -312,7 +312,7 @@ fun AperturaCelulaForm(onCelulaCreada: (Celula) -> Unit, modifier: Modifier = Mo
                     ) {
                         zonasList.forEach { z ->
                             DropdownMenuItem(
-                                text = { Text("Zona ${z.numero_zona} - ${z.lugares}") },
+                                text = { Text(z.nombre ?: "") },
                                 onClick = {
                                     selectedZona = z
                                     expandedZonas = false

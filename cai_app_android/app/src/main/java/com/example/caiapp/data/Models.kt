@@ -61,8 +61,7 @@ data class Equipo(
 @Serializable
 data class ZonaExpansion(
     val id: String,
-    val numero_zona: Int? = null,
-    val lugares: String? = null
+    val nombre: String? = null
 )
 
 @Serializable
