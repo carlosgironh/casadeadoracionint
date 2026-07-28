@@ -458,7 +458,7 @@ fun AperturaCelulaForm(onCelulaCreada: (Celula) -> Unit, modifier: Modifier = Mo
                             equipo_id = miEquipoId,
                             colider_id = selectedColider?.id,
                             lideres_adicionales = selectedColider?.nombre_completo ?: "",
-                            zona = if (selectedZona != null) "Zona ${selectedZona?.numero_zona}" else "",
+                            zona = selectedZona?.nombre ?: "",
                             direccion = direccion,
                             categoria = categoria,
                             fecha_apertura = finalFecha
