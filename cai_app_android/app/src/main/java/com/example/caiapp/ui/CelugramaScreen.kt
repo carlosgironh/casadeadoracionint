@@ -223,14 +223,26 @@ fun AperturaCelulaForm(onCelulaCreada: (Celula) -> Unit, modifier: Modifier = Mo
                 .select { filter { eq("id", currentUser.id) } }
                 .decodeSingleOrNull<Usuario>()
             
-            miEquipoId = miUsuario?.equipo_id
+            val miEquipoLiderId = miUsuario?.equipo_lider_id
+            val miLiderDirectoId = miUsuario?.lider_directo_id
             
-            if (miEquipoId != null) {
+            if (miEquipoLiderId != null) {
                 colideres = Supabase.client.from("usuarios")
                     .select {
                         filter {
-                            eq("equipo_lider_id", miEquipoId!!)
+                            eq("equipo_lider_id", miEquipoLiderId)
                             eq("pendiente_aprobacion", false)
+                            neq("id", currentUser.id)
+                        }
+                    }
+                    .decodeList<Usuario>()
+            } else if (miLiderDirectoId != null) {
+                colideres = Supabase.client.from("usuarios")
+                    .select {
+                        filter {
+                            eq("lider_directo_id", miLiderDirectoId)
+                            eq("pendiente_aprobacion", false)
+                            neq("id", currentUser.id)
                         }
                     }
                     .decodeList<Usuario>()
@@ -425,14 +437,23 @@ fun AperturaCelulaForm(onCelulaCreada: (Celula) -> Unit, modifier: Modifier = Mo
                                 expandedColideres = false
                             }
                         )
-                        colideres.forEach { c ->
+                        
+                        if (colideres.isEmpty()) {
                             DropdownMenuItem(
-                                text = { Text(c.nombre_completo) },
-                                onClick = {
-                                    selectedColider = c
-                                    expandedColideres = false
-                                }
+                                text = { Text("No tienes compañeros de nivel", color = Color.LightGray) },
+                                onClick = { expandedColideres = false },
+                                enabled = false
                             )
+                        } else {
+                            colideres.forEach { c ->
+                                DropdownMenuItem(
+                                    text = { Text(c.nombre_completo) },
+                                    onClick = {
+                                        selectedColider = c
+                                        expandedColideres = false
+                                    }
+                                )
+                            }
                         }
                     }
                 }

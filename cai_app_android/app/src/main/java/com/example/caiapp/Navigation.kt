@@ -93,6 +93,10 @@ fun MainNavigation(isLoggedIn: Boolean, onLoginClick: () -> Unit, onLogoutClick:
                     e.printStackTrace()
                 }
             }
+        } else {
+            if (selectedItem > 1) {
+                selectedItem = 0
+            }
         }
     }
 

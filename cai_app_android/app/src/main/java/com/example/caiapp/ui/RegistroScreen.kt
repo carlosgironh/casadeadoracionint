@@ -394,15 +394,22 @@ fun RegistroScreen(
                 expanded = expandedRedes,
                 onDismissRequest = { expandedRedes = false }
             ) {
-                redes.forEach { red ->
+                if (redes.isEmpty()) {
                     DropdownMenuItem(
-                        text = { Text(red.nombre) },
-                        onClick = {
-                            selectedRed = red
-                            selectedEquipo = null
-                            expandedRedes = false
-                        }
+                        text = { Text("Cargando redes...", color = Color.Gray) },
+                        onClick = { expandedRedes = false }
                     )
+                } else {
+                    redes.forEach { red ->
+                        DropdownMenuItem(
+                            text = { Text(red.nombre) },
+                            onClick = {
+                                selectedRed = red
+                                selectedEquipo = null
+                                expandedRedes = false
+                            }
+                        )
+                    }
                 }
             }
         }

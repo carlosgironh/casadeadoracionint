@@ -62,6 +62,9 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
     var newLiderIdToReassign by remember { mutableStateOf<String?>("") }
     var newColiderIdToReassign by remember { mutableStateOf<String?>("") }
     
+    var showCrearEquipoDialog by remember { mutableStateOf(false) }
+    var nombreEquipoToCreate by remember { mutableStateOf("") }
+    
     var usuarioToEdit by remember { mutableStateOf<Usuario?>(null) }
     var discipuloToEdit by remember { mutableStateOf<AsistenteCelula?>(null) }
     val scope = rememberCoroutineScope()
@@ -256,6 +259,38 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
         }
     }
 
+    fun crearEquipo(nombre: String) {
+        val currentUserLocal = currentUser ?: return
+        if (nombre.isBlank()) return
+        scope.launch {
+            try {
+                val miUsuario = Supabase.client.from("usuarios")
+                    .select { filter { eq("id", currentUserLocal.id) } }
+                    .decodeSingleOrNull<Usuario>()
+                val redId = miUsuario?.red_asignada_id ?: return@launch
+                
+                val nuevoEquipoId = java.util.UUID.randomUUID().toString()
+                Supabase.client.from("equipos").insert(
+                    com.example.caiapp.data.Equipo(
+                        id = nuevoEquipoId,
+                        nombre = nombre,
+                        red_id = redId
+                    )
+                )
+                
+                Supabase.client.from("usuarios").update(
+                    mapOf("equipo_id" to nuevoEquipoId)
+                ) { filter { eq("id", currentUserLocal.id) } }
+                
+                showCrearEquipoDialog = false
+                nombreEquipoToCreate = ""
+                fetchDiscipulos()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -441,11 +476,18 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                             fontSize = 20.sp,
                             color = Color(0xFF007F7F)
                         )
-                        Icon(
-                            imageVector = if (expandEquipos) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                            contentDescription = "Expandir/Colapsar",
-                            tint = Color(0xFF007F7F)
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                onClick = { showCrearEquipoDialog = true }
+                            ) {
+                                Icon(Icons.Filled.Add, contentDescription = "Crear Equipo", tint = Color(0xFF007F7F))
+                            }
+                            Icon(
+                                imageVector = if (expandEquipos) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                                contentDescription = "Expandir/Colapsar",
+                                tint = Color(0xFF007F7F)
+                            )
+                        }
                     }
                 }
                 
@@ -524,6 +566,39 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
+                    Text("Cancelar", color = Color.Gray)
+                }
+            }
+        )
+    }
+
+    if (showCrearEquipoDialog) {
+        AlertDialog(
+            onDismissRequest = { showCrearEquipoDialog = false },
+            title = { Text("Crear Equipo de Líderes", fontWeight = FontWeight.Bold) },
+            text = {
+                Column {
+                    Text("Ingresa el nombre del nuevo equipo que vas a liderar.", fontSize = 14.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedTextField(
+                        value = nombreEquipoToCreate,
+                        onValueChange = { nombreEquipoToCreate = it },
+                        label = { Text("Nombre del Equipo") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = { crearEquipo(nombreEquipoToCreate) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F7F))
+                ) {
+                    Text("Crear")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCrearEquipoDialog = false }) {
                     Text("Cancelar", color = Color.Gray)
                 }
             }

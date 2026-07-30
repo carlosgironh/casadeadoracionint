@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSupabase } from '../contexts/SupabaseContext';
-import { Bell, Plus, Trash2, Edit2, X } from 'lucide-react';
+import { Bell, Plus, Trash2, Edit2, X, Image as ImageIcon, Upload } from 'lucide-react';
 
 export default function AnunciosPage() {
   const { supabase } = useSupabase();
@@ -9,6 +9,8 @@ export default function AnunciosPage() {
   const [showModal, setShowModal] = useState(false);
   const [selectedAnuncio, setSelectedAnuncio] = useState<any>(null);
   const [newAnuncio, setNewAnuncio] = useState({ titulo: '', contenido: '' });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchAnuncios();
@@ -32,56 +34,87 @@ export default function AnunciosPage() {
   const openCreateModal = () => {
     setSelectedAnuncio(null);
     setNewAnuncio({ titulo: '', contenido: '' });
+    setImageFile(null);
     setShowModal(true);
   };
 
   const openEditModal = (anuncio: any) => {
     setSelectedAnuncio(anuncio);
     setNewAnuncio({ titulo: anuncio.titulo, contenido: anuncio.contenido });
+    setImageFile(null);
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
     setSelectedAnuncio(null);
+    setImageFile(null);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('anuncios')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      console.error('Error uploading image:', uploadError);
+      throw uploadError;
+    }
+    
+    const { data: { publicUrl } } = supabase.storage
+      .from('anuncios')
+      .getPublicUrl(filePath);
+      
+    return publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
 
-    if (selectedAnuncio) {
-      // Edit
-      const { error } = await supabase
-        .from('anuncios')
-        .update({
-          titulo: newAnuncio.titulo,
-          contenido: newAnuncio.contenido,
-        })
-        .eq('id', selectedAnuncio.id);
+    try {
+      let imageUrl = selectedAnuncio?.imagen_url || null;
 
-      if (error) {
-        console.error('[AnunciosPage] Error editando anuncio:', error);
-        alert('Error al editar el anuncio. Por favor intenta de nuevo.');
-      } else {
-        closeModal();
-        fetchAnuncios();
+      if (imageFile) {
+        imageUrl = await handleImageUpload(imageFile);
       }
-    } else {
-      // Create
-      const { error } = await supabase.from('anuncios').insert([
-        {
-          titulo: newAnuncio.titulo,
-          contenido: newAnuncio.contenido,
-        },
-      ]);
 
-      if (error) {
-        console.error('[AnunciosPage] Error creando anuncio:', error);
-        alert('Error al crear el anuncio. Por favor intenta de nuevo.');
+      if (selectedAnuncio) {
+        // Edit
+        const { error } = await supabase
+          .from('anuncios')
+          .update({
+            titulo: newAnuncio.titulo,
+            contenido: newAnuncio.contenido,
+            imagen_url: imageUrl,
+          })
+          .eq('id', selectedAnuncio.id);
+
+        if (error) throw error;
       } else {
-        closeModal();
-        fetchAnuncios();
+        // Create
+        const { error } = await supabase.from('anuncios').insert([
+          {
+            titulo: newAnuncio.titulo,
+            contenido: newAnuncio.contenido,
+            imagen_url: imageUrl,
+          },
+        ]);
+
+        if (error) throw error;
       }
+
+      closeModal();
+      fetchAnuncios();
+    } catch (error) {
+      console.error('[AnunciosPage] Error guardando anuncio:', error);
+      alert('Error al guardar el anuncio. Puede que el bucket "anuncios" no exista en Supabase o haya un problema de permisos.');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -133,6 +166,11 @@ export default function AnunciosPage() {
                         {new Date(anuncio.fecha).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' })}
                       </p>
                       <p className="mt-1 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{anuncio.contenido}</p>
+                      {anuncio.imagen_url && (
+                        <div className="mt-3">
+                          <img src={anuncio.imagen_url} alt="Imagen del anuncio" className="rounded-xl max-h-64 object-cover border border-gray-200" />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex space-x-1 shrink-0 ml-3">
@@ -201,6 +239,46 @@ export default function AnunciosPage() {
                   placeholder="Detalles del anuncio..."
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Imagen (Opcional)</label>
+                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl relative hover:bg-gray-50 transition-colors">
+                  <div className="space-y-1 text-center">
+                    {imageFile || (selectedAnuncio && selectedAnuncio.imagen_url) ? (
+                      <div className="flex flex-col items-center">
+                        <ImageIcon className="mx-auto h-12 w-12 text-blue-500" />
+                        <span className="mt-2 block text-sm font-medium text-gray-900 truncate max-w-[200px]">
+                          {imageFile ? imageFile.name : 'Imagen actual adjunta'}
+                        </span>
+                        <span className="mt-1 block text-xs text-gray-500">
+                          Haz clic o arrastra para cambiar
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <div className="flex text-sm text-gray-600 mt-2">
+                          <span className="relative cursor-pointer rounded-md font-medium text-[#0D509E] hover:text-[#0b3c75] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#0D509E]">
+                            <span>Sube un archivo</span>
+                          </span>
+                          <p className="pl-1">o arrastra y suelta</p>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF hasta 10MB</p>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setImageFile(e.target.files[0]);
+                      }
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </div>
+              </div>
               
               <div className="flex justify-end gap-3 pt-4 mt-2">
                 <button
@@ -212,9 +290,10 @@ export default function AnunciosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#0D509E] text-white hover:bg-[#0b3c75] rounded-xl font-bold shadow-md shadow-blue-900/20 transition-all"
+                  disabled={uploading}
+                  className="px-6 py-2.5 bg-[#0D509E] text-white hover:bg-[#0b3c75] rounded-xl font-bold shadow-md shadow-blue-900/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {selectedAnuncio ? 'Actualizar' : 'Publicar'}
+                  {uploading ? 'Guardando...' : selectedAnuncio ? 'Actualizar' : 'Publicar'}
                 </button>
               </div>
             </form>
