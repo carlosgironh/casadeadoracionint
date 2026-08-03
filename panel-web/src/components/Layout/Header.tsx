@@ -1,7 +1,12 @@
 import { useAuth } from '../../hooks/useAuth';
 import { Link } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export default function Header({ onMenuClick }: HeaderProps) {
   const { user, profile } = useAuth();
 
   const getRoleDisplay = (p?: typeof profile) => {
@@ -45,14 +50,23 @@ export default function Header() {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
-      <div className="flex-1"></div>
+    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-6">
+      <div className="flex items-center">
+        {onMenuClick && (
+          <button
+            onClick={onMenuClick}
+            className="md:hidden mr-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
+        )}
+      </div>
       <div className="flex items-center space-x-4">
-        <div className="text-right">
+        <div className="text-right hidden sm:block">
           <p className="text-sm font-medium text-gray-900">{profile?.nombre_completo || user?.email}</p>
           <p className="text-xs text-gray-500 uppercase">{getRoleDisplay(profile)}</p>
         </div>
-        <Link to="/perfil" className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer border border-gray-200">
+        <Link to="/perfil" className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer border border-gray-200 shrink-0">
           <span className="text-gray-700 font-bold text-lg">
             {getInitials(profile?.nombre_completo)}
           </span>
