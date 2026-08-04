@@ -5,9 +5,10 @@ import { useAuth } from '../../hooks/useAuth';
 interface SidebarProps {
   isOpen?: boolean;
   setIsOpen?: (isOpen: boolean) => void;
+  isCollapsed?: boolean;
 }
 
-export default function Sidebar({ isOpen = false, setIsOpen }: SidebarProps) {
+export default function Sidebar({ isOpen = false, setIsOpen, isCollapsed = false }: SidebarProps) {
   const { signOut } = useAuth();
 
   const navigation = [
@@ -30,15 +31,20 @@ export default function Sidebar({ isOpen = false, setIsOpen }: SidebarProps) {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-6 flex items-center justify-between md:justify-center">
-          <img src="/logo.png" alt="Casa de Adoracion Int Logo" className="h-20 w-auto" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.insertAdjacentHTML('afterend', '<h1 class="text-xl font-bold text-[#0D509E]">Casa de Adoracion Int Logo Falta</h1>'); }} />
+      <div className={`fixed inset-y-0 left-0 z-30 bg-white border-r border-gray-200 flex flex-col transform transition-all duration-300 ease-in-out md:relative md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'} ${isCollapsed ? 'w-20' : 'w-64'}`}>
+        <div className={`flex items-center justify-between md:justify-center ${isCollapsed ? 'p-4' : 'p-6'}`}>
+          <img 
+            src="/logo.png" 
+            alt="Casa de Adoracion Int Logo" 
+            className={`${isCollapsed ? 'h-10' : 'h-20'} w-auto transition-all duration-300`} 
+            onError={(e) => { e.currentTarget.style.display = 'none'; if (!e.currentTarget.nextElementSibling) e.currentTarget.insertAdjacentHTML('afterend', '<h1 class="text-xl font-bold text-[#0D509E]">Casa de Adoracion Int Logo Falta</h1>'); }} 
+          />
           <button className="md:hidden text-gray-500 hover:text-gray-700" onClick={() => setIsOpen && setIsOpen(false)}>
             <X className="h-6 w-6" />
           </button>
         </div>
         
-        <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
+        <nav className={`flex-1 space-y-2 overflow-y-auto ${isCollapsed ? 'px-2' : 'px-4'}`}>
           {navigation.map((item) => {
             const Icon = item.icon;
             return (
@@ -46,16 +52,17 @@ export default function Sidebar({ isOpen = false, setIsOpen }: SidebarProps) {
                 key={item.name}
                 to={item.href}
                 onClick={() => setIsOpen && setIsOpen(false)}
+                title={isCollapsed ? item.name : undefined}
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors ${
+                  `flex items-center ${isCollapsed ? 'justify-center px-2 py-3' : 'px-4 py-3'} text-sm font-medium rounded-xl transition-colors ${
                     isActive
                       ? 'bg-gray-100 text-gray-900 shadow-sm'
                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                   }`
                 }
               >
-                <Icon className="mr-3 h-5 w-5" />
-                {item.name}
+                <Icon className={isCollapsed ? 'h-6 w-6' : 'mr-3 h-5 w-5'} />
+                {!isCollapsed && <span>{item.name}</span>}
               </NavLink>
             );
           })}
@@ -64,10 +71,11 @@ export default function Sidebar({ isOpen = false, setIsOpen }: SidebarProps) {
         <div className="p-4 border-t border-gray-200">
           <button
             onClick={signOut}
-            className="flex w-full items-center px-4 py-3 text-sm font-medium text-red-500 rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors"
+            title={isCollapsed ? "Cerrar Sesión" : undefined}
+            className={`flex w-full items-center ${isCollapsed ? 'justify-center px-2 py-3' : 'px-4 py-3'} text-sm font-medium text-red-500 rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors`}
           >
-            <LogOut className="mr-3 h-5 w-5" />
-            Cerrar Sesión
+            <LogOut className={isCollapsed ? 'h-6 w-6' : 'mr-3 h-5 w-5'} />
+            {!isCollapsed && <span>Cerrar Sesión</span>}
           </button>
         </div>
       </div>
