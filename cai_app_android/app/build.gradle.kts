@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.caiapp"
+    namespace = "com.casadeadoracionint.app"
     compileSdk = 36
     defaultConfig {
-        applicationId = "com.example.caiapp"
+        applicationId = "com.casadeadoracionint.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
