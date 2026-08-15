@@ -89,14 +89,15 @@ export default function OrganigramaPage() {
     const { error } = await supabase.rpc('admin_update_user', {
       p_user_id: selectedUser.id,
       p_email: editEmail,
-      p_nombre: editNombre,
+      p_nombre_completo: editNombre,
       p_nivel: editNivel,
       p_system_role: editSystemRole,
       p_cedula: editCedula,
       p_telefono: editTelefono,
       p_whatsapp: editWhatsapp,
       p_username: editUsername,
-      p_password: editPassword
+      p_activo: selectedUser.activo ?? true,
+      p_password: editPassword || null
     });
     
     setIsSaving(false);
@@ -121,7 +122,7 @@ export default function OrganigramaPage() {
       const { error } = await supabase.rpc('admin_create_user', {
         p_email: newEmail,
         p_password: newPassword,
-        p_nombre: newNombre,
+        p_nombre_completo: newNombre,
         p_nivel: newNivel,
         p_system_role: newSystemRole,
         p_username: newUsername,

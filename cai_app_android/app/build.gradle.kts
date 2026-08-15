@@ -7,18 +7,33 @@ plugins {
 android {
     namespace = "com.casadeadoracionint.app"
     compileSdk = 36
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("cai-release.jks")
+            storePassword = "CaiApp2026!"
+            keyAlias = "cai-key"
+            keyPassword = "CaiApp2026!"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.casadeadoracionint.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

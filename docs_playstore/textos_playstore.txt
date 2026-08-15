@@ -1,0 +1,29 @@
+Nombre de la app (máx 30):
+Casa de Adoracion Int
+
+Descripción breve (máx 80):
+Radio en vivo, anuncios y portal de líderes de Casa de Adoración Internacional.
+
+Descripción completa (máx 4000):
+Bienvenido a la aplicación oficial de Casa de Adoración Internacional 🙏
+
+Mantente conectado con tu comunidad de fe desde cualquier lugar. Nuestra app te da acceso a la radio en vivo de la iglesia, anuncios importantes y herramientas exclusivas para líderes.
+
+🎙️ RADIO EN VIVO
+Escucha nuestra señal de radio privada en streaming en tiempo real. El reproductor continúa en segundo plano mientras usas otras apps o con la pantalla bloqueada.
+
+📢 ANUNCIOS
+Mantente al día con las últimas noticias, eventos y comunicados de la iglesia directamente en tu dispositivo.
+
+🔐 PORTAL DE LÍDERES
+Acceso exclusivo para pastores, líderes de red y líderes de célula:
+• Gestión de discípulos y célula
+• Registro y seguimiento de celugrama
+• Bosquejos de mensajes mensuales
+• Informes de reuniones
+
+🛡️ PRIVACIDAD Y SEGURIDAD
+Tus datos están protegidos con cifrado SSL/HTTPS. No compartimos tu información con terceros.
+
+Casa de Adoración Internacional — Fe, Comunidad y Liderazgo.
+Sitio web: https://casadeadoracionint.com
