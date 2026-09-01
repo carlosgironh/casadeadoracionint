@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSupabase } from '../contexts/SupabaseContext';
-import { Bell, Plus, Trash2, Edit2, X, Upload } from 'lucide-react';
+import { Bell, Plus, Trash2, Edit2, X, Upload, Maximize2 } from 'lucide-react';
 
 export default function AnunciosPage() {
   const { supabase } = useSupabase();
@@ -11,14 +11,15 @@ export default function AnunciosPage() {
   const [newAnuncio, setNewAnuncio] = useState({ titulo: '', contenido: '', imagen_url: '' });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [viewingImageUrl, setViewingImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAnuncios();
   }, []);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll when any modal is open
   useEffect(() => {
-    if (showModal) {
+    if (showModal || viewingImageUrl) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -26,7 +27,7 @@ export default function AnunciosPage() {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [showModal]);
+  }, [showModal, viewingImageUrl]);
 
   // Compute image preview URL
   const previewUrl = useMemo(() => {
@@ -185,44 +186,62 @@ export default function AnunciosPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <ul className="divide-y divide-gray-100">
             {anuncios.map((anuncio) => (
-              <li key={anuncio.id} className="p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex justify-between items-start">
-                  <div className="flex gap-3">
-                    <div className="bg-blue-100/50 border border-blue-200 p-2.5 rounded-xl text-[#0D509E] shrink-0">
+              <li key={anuncio.id} className="p-4 sm:p-5 hover:bg-gray-50/70 transition-colors">
+                <div className="flex gap-4 items-start justify-between">
+                  {/* Contenido Izquierda: Icono, Título, Fecha y Texto */}
+                  <div className="flex gap-3.5 flex-1 min-w-0 items-start">
+                    <div className="bg-blue-50 border border-blue-200/60 p-2.5 rounded-xl text-[#0D509E] shrink-0 mt-0.5">
                       <Bell className="w-5 h-5" />
                     </div>
-                    <div>
-                      <h3 className="text-base font-bold text-gray-900">{anuncio.titulo}</h3>
-                      <p className="text-xs font-semibold text-gray-400 mt-0.5 mb-1.5">
-                        {anuncio.fecha ? new Date(anuncio.fecha).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' }) : 'Reciente'}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-base font-bold text-gray-900">{anuncio.titulo}</h3>
+                        <span className="text-xs font-medium text-gray-400">
+                          • {anuncio.fecha ? new Date(anuncio.fecha).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' }) : 'Reciente'}
+                        </span>
+                      </div>
+                      <p className="mt-1.5 text-sm text-gray-600 whitespace-pre-wrap leading-relaxed">
+                        {anuncio.contenido}
                       </p>
-                      <p className="mt-1 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{anuncio.contenido}</p>
-                      {anuncio.imagen_url && (
-                        <div className="mt-3">
-                          <img 
-                            src={anuncio.imagen_url} 
-                            alt="Imagen del anuncio" 
-                            className="rounded-xl max-h-64 object-cover border border-gray-200" 
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
-                  <div className="flex space-x-1 shrink-0 ml-3">
-                    <button
-                      onClick={() => openEditModal(anuncio)}
-                      className="p-1.5 text-gray-400 hover:text-[#0D509E] hover:bg-blue-50 rounded-lg transition-colors"
-                      title="Editar"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(anuncio.id)}
-                      className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Eliminar"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+
+                  {/* Contenido Derecha: Miniatura compacta y botones de acción */}
+                  <div className="flex items-center gap-3 shrink-0 ml-2">
+                    {anuncio.imagen_url && (
+                      <button
+                        type="button"
+                        onClick={() => setViewingImageUrl(anuncio.imagen_url)}
+                        className="relative group rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:ring-2 hover:ring-[#0D509E] transition-all bg-gray-50 shrink-0"
+                        title="Clic para ver imagen completa"
+                      >
+                        <img 
+                          src={anuncio.imagen_url} 
+                          alt="Miniatura" 
+                          className="w-16 h-16 sm:w-20 sm:h-20 object-cover group-hover:scale-105 transition-transform duration-200" 
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                          <Maximize2 className="w-4 h-4" />
+                        </div>
+                      </button>
+                    )}
+
+                    <div className="flex flex-col sm:flex-row gap-1">
+                      <button
+                        onClick={() => openEditModal(anuncio)}
+                        className="p-2 text-gray-400 hover:text-[#0D509E] hover:bg-blue-50 rounded-lg transition-colors"
+                        title="Editar"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(anuncio.id)}
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Eliminar"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -239,6 +258,33 @@ export default function AnunciosPage() {
         </div>
       )}
 
+      {/* Modal Lightbox para ver la imagen en tamaño completo */}
+      {viewingImageUrl && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto"
+          onClick={() => setViewingImageUrl(null)}
+        >
+          <div 
+            className="relative max-w-3xl w-full max-h-[90vh] flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setViewingImageUrl(null)}
+              className="absolute -top-12 right-0 sm:top-2 sm:right-2 text-white/80 hover:text-white bg-black/40 hover:bg-black/60 p-2 rounded-full backdrop-blur-md transition-colors"
+              title="Cerrar vista"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <img 
+              src={viewingImageUrl} 
+              alt="Imagen completa del anuncio" 
+              className="max-w-full max-h-[85vh] rounded-2xl object-contain shadow-2xl border border-white/10" 
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Crear / Editar Anuncio */}
       {showModal && (
         <div 
           className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto"
