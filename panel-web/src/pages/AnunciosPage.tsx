@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSupabase } from '../contexts/SupabaseContext';
-import { Bell, Plus, Trash2, Edit2, X, Image as ImageIcon, Upload } from 'lucide-react';
+import { Bell, Plus, Trash2, Edit2, X, Upload } from 'lucide-react';
 
 export default function AnunciosPage() {
   const { supabase } = useSupabase();
@@ -8,13 +8,33 @@ export default function AnunciosPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedAnuncio, setSelectedAnuncio] = useState<any>(null);
-  const [newAnuncio, setNewAnuncio] = useState({ titulo: '', contenido: '' });
+  const [newAnuncio, setNewAnuncio] = useState({ titulo: '', contenido: '', imagen_url: '' });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchAnuncios();
   }, []);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
+
+  // Compute image preview URL
+  const previewUrl = useMemo(() => {
+    if (imageFile) {
+      return URL.createObjectURL(imageFile);
+    }
+    return newAnuncio.imagen_url || null;
+  }, [imageFile, newAnuncio.imagen_url]);
 
   const fetchAnuncios = async () => {
     setLoading(true);
@@ -33,14 +53,18 @@ export default function AnunciosPage() {
 
   const openCreateModal = () => {
     setSelectedAnuncio(null);
-    setNewAnuncio({ titulo: '', contenido: '' });
+    setNewAnuncio({ titulo: '', contenido: '', imagen_url: '' });
     setImageFile(null);
     setShowModal(true);
   };
 
   const openEditModal = (anuncio: any) => {
     setSelectedAnuncio(anuncio);
-    setNewAnuncio({ titulo: anuncio.titulo, contenido: anuncio.contenido });
+    setNewAnuncio({
+      titulo: anuncio.titulo || '',
+      contenido: anuncio.contenido || '',
+      imagen_url: anuncio.imagen_url || ''
+    });
     setImageFile(null);
     setShowModal(true);
   };
@@ -49,6 +73,7 @@ export default function AnunciosPage() {
     setShowModal(false);
     setSelectedAnuncio(null);
     setImageFile(null);
+    setNewAnuncio({ titulo: '', contenido: '', imagen_url: '' });
   };
 
   const handleImageUpload = async (file: File) => {
@@ -72,12 +97,17 @@ export default function AnunciosPage() {
     return publicUrl;
   };
 
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setNewAnuncio(prev => ({ ...prev, imagen_url: '' }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
 
     try {
-      let imageUrl = selectedAnuncio?.imagen_url || null;
+      let imageUrl = newAnuncio.imagen_url || null;
 
       if (imageFile) {
         imageUrl = await handleImageUpload(imageFile);
@@ -164,12 +194,16 @@ export default function AnunciosPage() {
                     <div>
                       <h3 className="text-base font-bold text-gray-900">{anuncio.titulo}</h3>
                       <p className="text-xs font-semibold text-gray-400 mt-0.5 mb-1.5">
-                        {new Date(anuncio.fecha).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' })}
+                        {anuncio.fecha ? new Date(anuncio.fecha).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' }) : 'Reciente'}
                       </p>
                       <p className="mt-1 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{anuncio.contenido}</p>
                       {anuncio.imagen_url && (
                         <div className="mt-3">
-                          <img src={anuncio.imagen_url} alt="Imagen del anuncio" className="rounded-xl max-h-64 object-cover border border-gray-200" />
+                          <img 
+                            src={anuncio.imagen_url} 
+                            alt="Imagen del anuncio" 
+                            className="rounded-xl max-h-64 object-cover border border-gray-200" 
+                          />
                         </div>
                       )}
                     </div>
@@ -206,94 +240,125 @@ export default function AnunciosPage() {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-0 w-full max-w-lg shadow-2xl overflow-hidden">
-            <div className="bg-white border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto"
+          onClick={closeModal}
+        >
+          <div 
+            className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header fijo */}
+            <div className="bg-white border-b border-gray-100 px-6 py-4 flex justify-between items-center shrink-0">
               <h2 className="text-xl font-bold text-gray-900">
                 {selectedAnuncio ? 'Editar Anuncio' : 'Crear Nuevo Anuncio'}
               </h2>
-              <button onClick={closeModal} className="text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-2 rounded-full transition-colors">
+              <button 
+                type="button"
+                onClick={closeModal} 
+                className="text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-2 rounded-full transition-colors"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
-                <input
-                  type="text"
-                  required
-                  value={newAnuncio.titulo}
-                  onChange={(e) => setNewAnuncio({ ...newAnuncio, titulo: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0D509E] focus:border-transparent outline-none transition-all"
-                  placeholder="Ej: Ayuno General"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Contenido</label>
-                <textarea
-                  required
-                  rows={5}
-                  value={newAnuncio.contenido}
-                  onChange={(e) => setNewAnuncio({ ...newAnuncio, contenido: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0D509E] focus:border-transparent outline-none transition-all"
-                  placeholder="Detalles del anuncio..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Imagen (Opcional)</label>
-                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl relative hover:bg-gray-50 transition-colors">
-                  <div className="space-y-1 text-center">
-                    {imageFile || (selectedAnuncio && selectedAnuncio.imagen_url) ? (
-                      <div className="flex flex-col items-center">
-                        <ImageIcon className="mx-auto h-12 w-12 text-blue-500" />
-                        <span className="mt-2 block text-sm font-medium text-gray-900 truncate max-w-[200px]">
-                          {imageFile ? imageFile.name : 'Imagen actual adjunta'}
-                        </span>
-                        <span className="mt-1 block text-xs text-gray-500">
-                          Haz clic o arrastra para cambiar
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <div className="flex text-sm text-gray-600 mt-2">
-                          <span className="relative cursor-pointer rounded-md font-medium text-[#0D509E] hover:text-[#0b3c75] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#0D509E]">
-                            <span>Sube un archivo</span>
-                          </span>
-                          <p className="pl-1">o arrastra y suelta</p>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF hasta 10MB</p>
-                      </div>
-                    )}
-                  </div>
+            {/* Formulario con cuerpo scrollable independiente */}
+            <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+              <div className="p-6 space-y-5 overflow-y-auto flex-1">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
                   <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files && e.target.files[0]) {
-                        setImageFile(e.target.files[0]);
-                      }
-                    }}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    type="text"
+                    required
+                    value={newAnuncio.titulo}
+                    onChange={(e) => setNewAnuncio({ ...newAnuncio, titulo: e.target.value })}
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0D509E] focus:border-transparent outline-none transition-all"
+                    placeholder="Ej: Ayuno General"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Contenido</label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={newAnuncio.contenido}
+                    onChange={(e) => setNewAnuncio({ ...newAnuncio, contenido: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0D509E] focus:border-transparent outline-none transition-all resize-y"
+                    placeholder="Detalles del anuncio..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Imagen (Opcional)</label>
+                  {previewUrl ? (
+                    <div className="relative border border-gray-200 rounded-xl p-3 bg-gray-50 flex flex-col items-center">
+                      <img 
+                        src={previewUrl} 
+                        alt="Vista previa" 
+                        className="rounded-lg max-h-48 w-full object-cover border border-gray-200"
+                      />
+                      <div className="flex gap-2 mt-3 w-full justify-end">
+                        <label className="cursor-pointer text-xs font-semibold text-[#0D509E] hover:bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200 transition-colors">
+                          Cambiar imagen
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files[0]) {
+                                setImageFile(e.target.files[0]);
+                              }
+                            }}
+                            className="hidden"
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg border border-red-200 transition-colors"
+                        >
+                          Quitar imagen
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer hover:bg-gray-50 hover:border-[#0D509E] transition-all">
+                      <Upload className="h-9 w-9 text-gray-400 mb-2" />
+                      <div className="text-sm text-gray-600 font-medium text-center">
+                        <span className="text-[#0D509E]">Haz clic para subir un archivo</span> o arrastra y suelta
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">PNG, JPG, JPEG o WEBP hasta 10MB</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setImageFile(e.target.files[0]);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
                 </div>
               </div>
               
-              <div className="flex justify-end gap-3 pt-4 mt-2">
+              {/* Footer fijo de acciones */}
+              <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-5 py-2.5 text-gray-600 hover:bg-gray-100 rounded-xl font-medium transition-colors"
+                  className="px-5 py-2.5 text-gray-600 hover:bg-gray-200/60 rounded-xl font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="px-6 py-2.5 bg-[#0D509E] text-white hover:bg-[#0b3c75] rounded-xl font-bold shadow-md shadow-blue-900/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 bg-[#0D509E] text-white hover:bg-[#0b3c75] rounded-xl font-bold shadow-md shadow-blue-900/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
                 >
+                  {uploading && (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  )}
                   {uploading ? 'Guardando...' : selectedAnuncio ? 'Actualizar' : 'Publicar'}
                 </button>
               </div>
