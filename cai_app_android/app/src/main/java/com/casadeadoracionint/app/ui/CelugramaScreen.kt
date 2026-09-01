@@ -1147,16 +1147,18 @@ fun AddAsistenteDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = cedula,
-                    onValueChange = { cedula = it },
+                    onValueChange = { cedula = formatPanamaCedula(it) },
                     label = { Text("Cédula o Pasaporte") },
+                    placeholder = { Text("8-963-952 o Pasaporte") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = telefono,
-                    onValueChange = { telefono = it },
+                    onValueChange = { telefono = formatPanamaPhone(it) },
                     label = { Text("Teléfono / WhatsApp") },
+                    placeholder = { Text("6000-0000") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true

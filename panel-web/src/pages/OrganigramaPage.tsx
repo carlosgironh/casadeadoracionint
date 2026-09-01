@@ -584,7 +584,7 @@ export default function OrganigramaPage() {
                     value={newCedula} 
                     onChange={(e) => setNewCedula(e.target.value)} 
                     className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#5EBBEC] focus:border-[#5EBBEC]" 
-                    placeholder="V-12345678"
+                    placeholder="8-963-952 o Pasaporte"
                   />
                 </div>
                 <div>
@@ -594,7 +594,7 @@ export default function OrganigramaPage() {
                     value={newTelefono} 
                     onChange={(e) => setNewTelefono(e.target.value)} 
                     className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#5EBBEC] focus:border-[#5EBBEC]" 
-                    placeholder="0414-0000000"
+                    placeholder="6000-0000"
                   />
                 </div>
                 <div>
@@ -604,7 +604,7 @@ export default function OrganigramaPage() {
                     value={newWhatsapp} 
                     onChange={(e) => setNewWhatsapp(e.target.value)} 
                     className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#5EBBEC] focus:border-[#5EBBEC]" 
-                    placeholder="0414-0000000"
+                    placeholder="6000-0000"
                   />
                 </div>
               </div>

@@ -89,6 +89,8 @@ fun LoginScreen(
                 .fillMaxSize()
                 .background(gradient)
                 .padding(paddingValues)
+                .statusBarsPadding()
+                .navigationBarsPadding()
         ) {
             Column(
                 modifier = Modifier
