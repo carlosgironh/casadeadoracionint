@@ -23,6 +23,8 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 @kotlinx.serialization.Serializable
 data class UsuarioUpdate(
@@ -158,32 +160,38 @@ fun RegistroScreen(
                 val authResult = Supabase.client.auth.signUpWith(Email) {
                     this.email = currentEmail
                     this.password = currentPassword
+                    data = buildJsonObject {
+                        put("username", username.trim())
+                    }
                 }
 
                 // Si no hay confirmación de email, Supabase hace login automático y authResult puede ser null
                 val sessionUser = Supabase.client.auth.currentSessionOrNull()?.user
                 val userId = authResult?.id ?: sessionUser?.id
 
-                if (userId != null) {
-                    // Insert usuarios record
-                    Supabase.client.from("usuarios").insert(
-                        UsuarioInsert(
-                            id = userId,
-                            email = currentEmail,
-                            nombre_completo = nombreCompleto,
-                            username = username.trim(),
-                            cedula = cedula.trim(),
-                            equipo_lider_id = selectedEquipo!!.id,
-                            red_asignada_id = selectedRed!!.id,
-                            nivel = 1,
-                            plan_felipe = planFelipe,
-                            capacitacion = capacitacion,
-                            ministerio = ministerio,
-                            pendiente_aprobacion = true,
-                            whatsapp = whatsapp.takeIf { it.isNotBlank() },
-                            direccion = direccion.trim().takeIf { it.isNotBlank() } ?: "Por definir"
-                        )
+                if (userId == null) {
+                    throw Exception("No se pudo completar el registro en el servidor de autenticación.")
+                }
+
+                // Insert usuarios record
+                Supabase.client.from("usuarios").insert(
+                    UsuarioInsert(
+                        id = userId,
+                        email = currentEmail,
+                        nombre_completo = nombreCompleto,
+                        username = username.trim(),
+                        cedula = cedula.trim(),
+                        equipo_lider_id = selectedEquipo!!.id,
+                        red_asignada_id = selectedRed!!.id,
+                        nivel = 1,
+                        plan_felipe = planFelipe,
+                        capacitacion = capacitacion,
+                        ministerio = ministerio,
+                        pendiente_aprobacion = true,
+                        whatsapp = whatsapp.takeIf { it.isNotBlank() },
+                        direccion = direccion.trim().takeIf { it.isNotBlank() } ?: "Por definir"
                     )
+                )
                     
                     // Insert notification for the leaders of the selected equipo (mega-equipo)
                     try {

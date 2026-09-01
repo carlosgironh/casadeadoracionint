@@ -316,27 +316,3 @@ BEGIN
   WHERE id = p_user_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
-
-CREATE OR REPLACE FUNCTION public.get_email_by_username(p_username TEXT)
-RETURNS TEXT AS $$
-DECLARE
-  v_email TEXT;
-BEGIN
-  -- 1. Consultar en public.usuarios (insensible a mayúsculas/minúsculas)
-  SELECT email INTO v_email
-  FROM public.usuarios
-  WHERE LOWER(TRIM(username)) = LOWER(TRIM(p_username))
-  LIMIT 1;
-
-  -- 2. Fallback en auth.users
-  IF v_email IS NULL THEN
-    SELECT email INTO v_email
-    FROM auth.users
-    WHERE LOWER(TRIM(raw_user_meta_data->>'username')) = LOWER(TRIM(p_username))
-    LIMIT 1;
-  END IF;
-  
-  RETURN v_email;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
