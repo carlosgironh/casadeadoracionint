@@ -1156,9 +1156,9 @@ fun AddAsistenteDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = telefono,
-                    onValueChange = { telefono = formatPanamaPhone(it) },
+                    onValueChange = { telefono = formatFlexiblePhone(it) },
                     label = { Text("Teléfono / WhatsApp") },
-                    placeholder = { Text("6000-0000") },
+                    placeholder = { Text("+507 6000-0000 o 6000-0000") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true

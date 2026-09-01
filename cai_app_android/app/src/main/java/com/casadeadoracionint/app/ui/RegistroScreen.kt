@@ -68,13 +68,9 @@ data class NotificacionInsert(
     val mensaje: String
 )
 
-fun formatPanamaPhone(input: String): String {
-    val digits = input.filter { it.isDigit() }.take(8)
-    return if (digits.length > 4) {
-        "${digits.substring(0, 4)}-${digits.substring(4)}"
-    } else {
-        digits
-    }
+fun formatFlexiblePhone(input: String): String {
+    // Allows +, digits, spaces, dashes and parentheses for international or local numbers of any length
+    return input.filter { it.isDigit() || it == '+' || it == '-' || it == ' ' || it == '(' || it == ')' }.take(30)
 }
 
 fun formatPanamaCedula(input: String): String {
@@ -137,7 +133,6 @@ fun RegistroScreen(
     
     var planFelipe by remember { mutableStateOf(false) }
     var capacitacion by remember { mutableStateOf("No") }
-    var expandedCapacitacion by remember { mutableStateOf(false) }
     var ministerio by remember { mutableStateOf("") }
     
     var selectedEquipo by remember { mutableStateOf<Equipo?>(null) }
@@ -495,9 +490,9 @@ fun RegistroScreen(
 
             OutlinedTextField(
                 value = whatsapp,
-                onValueChange = { whatsapp = formatPanamaPhone(it) },
+                onValueChange = { whatsapp = formatFlexiblePhone(it) },
                 label = { Text("Número de WhatsApp / Teléfono (Opcional)") },
-                placeholder = { Text("6000-0000") },
+                placeholder = { Text("+507 6000-0000 o 6000-0000") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
@@ -659,47 +654,39 @@ fun RegistroScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Dropdown Recibiendo Capacitación
-            ExposedDropdownMenuBox(
-                expanded = expandedCapacitacion,
-                onExpandedChange = { expandedCapacitacion = !expandedCapacitacion }
+            // Selector Recibiendo Capacitación: Sí / No
+            Text(
+                text = "¿Recibiendo Capacitación actualmente?",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF374151),
+                modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 6.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                OutlinedTextField(
-                    value = capacitacion,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("¿Recibiendo Capacitación actualmente?") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCapacitacion) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true).fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedBorderColor = Color(0xFF0D509E),
-                        unfocusedBorderColor = Color.LightGray
-                    )
+                FilterChip(
+                    selected = capacitacion == "Sí",
+                    onClick = { capacitacion = "Sí" },
+                    label = { Text("Sí", fontWeight = if (capacitacion == "Sí") FontWeight.Bold else FontWeight.Normal) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = Color(0xFF0D509E),
+                        selectedLabelColor = Color.White
+                    ),
+                    modifier = Modifier.weight(1f)
                 )
-                ExposedDropdownMenu(
-                    expanded = expandedCapacitacion,
-                    onDismissRequest = { expandedCapacitacion = false }
-                ) {
-                    listOf(
-                        "No",
-                        "Sí - Plan Felipe",
-                        "Sí - Escuela de Líderes",
-                        "Sí - Seminario de Visión",
-                        "Sí - Discipulado",
-                        "Sí - Otro"
-                    ).forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                capacitacion = option
-                                expandedCapacitacion = false
-                            }
-                        )
-                    }
-                }
+                FilterChip(
+                    selected = capacitacion == "No",
+                    onClick = { capacitacion = "No" },
+                    label = { Text("No", fontWeight = if (capacitacion == "No") FontWeight.Bold else FontWeight.Normal) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = Color(0xFF0D509E),
+                        selectedLabelColor = Color.White
+                    ),
+                    modifier = Modifier.weight(1f)
+                )
             }
             
             Spacer(modifier = Modifier.height(12.dp))
