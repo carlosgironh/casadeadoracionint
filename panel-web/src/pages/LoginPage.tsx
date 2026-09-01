@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useSupabase } from '../hooks/useSupabase';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, Smartphone } from 'lucide-react';
 
 // Límite de intentos de login antes de bloquear temporalmente
 const MAX_FAILED_ATTEMPTS = 5;
@@ -206,6 +206,19 @@ export default function LoginPage() {
             Solo el personal autorizado puede acceder a este panel.
             Si necesitas acceso, contacta al administrador del sistema.
           </p>
+
+          {/* Enlace directo para descargar el APK */}
+          <div className="pt-4 border-t border-gray-100 flex flex-col items-center">
+            <a
+              href="/CasaDeAdoracionINT.apk"
+              download="CasaDeAdoracionINT.apk"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-[#0D509E] bg-blue-50 hover:bg-blue-100/70 border border-blue-200/60 rounded-xl transition-colors shadow-sm"
+            >
+              <Smartphone className="w-4 h-4 text-[#0D509E]" />
+              Descargar App Android (.APK)
+            </a>
+            <p className="text-[11px] text-gray-400 mt-1">Versión para dispositivos móviles</p>
+          </div>
         </form>
       </div>
     </div>

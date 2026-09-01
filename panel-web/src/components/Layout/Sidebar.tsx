@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, FileText, Users, LogOut, Bell, Contact2, X } from 'lucide-react';
+import { LayoutDashboard, BookOpen, FileText, Users, LogOut, Bell, Contact2, X, Smartphone } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 interface SidebarProps {
@@ -68,11 +68,20 @@ export default function Sidebar({ isOpen = false, setIsOpen, isCollapsed = false
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 space-y-1">
+          <a
+            href="/CasaDeAdoracionINT.apk"
+            download="CasaDeAdoracionINT.apk"
+            title={isCollapsed ? "Descargar App Android" : undefined}
+            className={`flex w-full items-center ${isCollapsed ? 'justify-center px-2 py-2.5' : 'px-4 py-2.5'} text-sm font-medium text-[#0D509E] rounded-xl hover:bg-blue-50 transition-colors`}
+          >
+            <Smartphone className={isCollapsed ? 'h-6 w-6' : 'mr-3 h-5 w-5'} />
+            {!isCollapsed && <span>Descargar App Android</span>}
+          </a>
           <button
             onClick={signOut}
             title={isCollapsed ? "Cerrar Sesión" : undefined}
-            className={`flex w-full items-center ${isCollapsed ? 'justify-center px-2 py-3' : 'px-4 py-3'} text-sm font-medium text-red-500 rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors`}
+            className={`flex w-full items-center ${isCollapsed ? 'justify-center px-2 py-2.5' : 'px-4 py-2.5'} text-sm font-medium text-red-500 rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors`}
           >
             <LogOut className={isCollapsed ? 'h-6 w-6' : 'mr-3 h-5 w-5'} />
             {!isCollapsed && <span>Cerrar Sesión</span>}
