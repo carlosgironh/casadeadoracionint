@@ -38,7 +38,7 @@ fun BosquejosScreen(modifier: Modifier = Modifier) {
     var bosquejos by remember { mutableStateOf<List<Bosquejo>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var selectedTab by remember { mutableStateOf(0) }
-    val tabs = listOf("Discipulado", "Evangelísticos")
+    val tabs = listOf("Todos", "Discipulado", "Evangelísticos")
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
@@ -100,8 +100,11 @@ fun BosquejosScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         val filteredBosquejos = remember(bosquejos, selectedTab) {
-            val tipoBuscado = if (selectedTab == 0) "discipulado" else "evangelistico"
-            bosquejos.filter { it.tipo.equals(tipoBuscado, ignoreCase = true) }
+            when (selectedTab) {
+                1 -> bosquejos.filter { it.tipo.equals("discipulado", ignoreCase = true) }
+                2 -> bosquejos.filter { it.tipo.equals("evangelistico", ignoreCase = true) }
+                else -> bosquejos
+            }
         }
 
         if (isLoading) {
@@ -190,16 +193,22 @@ fun BosquejoCard(bosquejo: Bosquejo) {
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
-                if (!bosquejo.puntos_desarrollo.isNullOrEmpty()) {
+                val puntosList = remember(bosquejo) { bosquejo.obtenerListaPuntos() }
+                if (puntosList.isNotEmpty()) {
                     Text(
                         text = "Desarrollo / Puntos",
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp,
                         color = Color(0xFF374151)
                     )
-                    bosquejo.puntos_desarrollo.forEachIndexed { index, punto ->
+                    puntosList.forEachIndexed { index, punto ->
+                        val textoPunto = if (punto.startsWith("${index + 1}.") || punto.startsWith("${index + 1} -") || punto.startsWith("${index + 1})")) {
+                            punto
+                        } else {
+                            "${index + 1}. $punto"
+                        }
                         Text(
-                            text = "${index + 1}. $punto",
+                            text = textoPunto,
                             fontSize = 16.sp,
                             color = Color(0xFF4B5563),
                             modifier = Modifier.padding(vertical = 4.dp),
@@ -275,10 +284,16 @@ fun shareBosquejoAsPdf(context: android.content.Context, bosquejo: Bosquejo) {
         drawText("Introducción:", headingPaint)
         drawText(bosquejo.introduccion, bodyPaint)
 
-        if (!bosquejo.puntos_desarrollo.isNullOrEmpty()) {
+        val puntosPdf = bosquejo.obtenerListaPuntos()
+        if (puntosPdf.isNotEmpty()) {
             drawText("Desarrollo:", headingPaint)
-            bosquejo.puntos_desarrollo.forEachIndexed { index, punto ->
-                drawText("${index + 1}. $punto", bodyPaint)
+            puntosPdf.forEachIndexed { index, punto ->
+                val textoPunto = if (punto.startsWith("${index + 1}.") || punto.startsWith("${index + 1} -") || punto.startsWith("${index + 1})")) {
+                    punto
+                } else {
+                    "${index + 1}. $punto"
+                }
+                drawText(textoPunto, bodyPaint)
             }
         }
 

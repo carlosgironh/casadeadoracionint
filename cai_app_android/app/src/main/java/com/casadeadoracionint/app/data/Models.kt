@@ -1,6 +1,10 @@
 package com.casadeadoracionint.app.data
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 @Serializable
 data class Bosquejo(
@@ -8,11 +12,32 @@ data class Bosquejo(
     val titulo: String,
     val versiculo_base: String,
     val introduccion: String,
-    val puntos_desarrollo: List<String>? = null,
+    val puntos_desarrollo: JsonElement? = null,
     val conclusion: String,
     val tipo: String? = null,
     val created_at: String
-)
+) {
+    fun obtenerListaPuntos(): List<String> {
+        val element = puntos_desarrollo ?: return emptyList()
+        return when (element) {
+            is JsonArray -> {
+                element.mapNotNull { item ->
+                    when (item) {
+                        is JsonPrimitive -> item.content
+                        is JsonObject -> {
+                            val tit = item["titulo"]?.let { if (it is JsonPrimitive) it.content else it.toString() } ?: ""
+                            val cont = item["contenido"]?.let { if (it is JsonPrimitive) it.content else it.toString() } ?: ""
+                            if (tit.isNotEmpty() && cont.isNotEmpty()) "$tit\n$cont" else tit.ifEmpty { cont }
+                        }
+                        else -> item.toString()
+                    }
+                }
+            }
+            is JsonPrimitive -> listOf(element.content)
+            else -> emptyList()
+        }
+    }
+}
 
 @Serializable
 data class Anuncio(
