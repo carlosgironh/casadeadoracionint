@@ -85,7 +85,7 @@ fun formatPanamaCedula(input: String): String {
     
     if (digitsOnly.isEmpty()) return ""
     
-    // Auto-format digits into 00-0000-0000 / 8-963-952
+    // Auto-format digits into 00-0000-0000
     if (clean.contains("-")) {
         val parts = clean.split("-").map { it.filter { c -> c.isDigit() } }
         return parts.filter { it.isNotEmpty() }.joinToString("-").take(16)
@@ -457,8 +457,8 @@ fun RegistroScreen(
                         it.uppercase().filter { c -> c.isLetterOrDigit() }.take(20)
                     }
                 },
-                label = { Text(if (tipoDocumento == "Cédula") "Cédula (ej. 8-963-952 o 00-0000-0000) *" else "Número de Pasaporte *") },
-                placeholder = { Text(if (tipoDocumento == "Cédula") "8-963-952" else "PA12345678") },
+                label = { Text(if (tipoDocumento == "Cédula") "Cédula (ej. 00-0000-0000) *" else "Número de Pasaporte *") },
+                placeholder = { Text(if (tipoDocumento == "Cédula") "00-0000-0000" else "PA12345678") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(

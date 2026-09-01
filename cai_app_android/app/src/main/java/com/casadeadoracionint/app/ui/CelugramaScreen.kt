@@ -1149,7 +1149,7 @@ fun AddAsistenteDialog(
                     value = cedula,
                     onValueChange = { cedula = formatPanamaCedula(it) },
                     label = { Text("Cédula o Pasaporte") },
-                    placeholder = { Text("8-963-952 o Pasaporte") },
+                    placeholder = { Text("00-0000-0000 o Pasaporte") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )

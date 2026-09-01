@@ -584,7 +584,7 @@ export default function OrganigramaPage() {
                     value={newCedula} 
                     onChange={(e) => setNewCedula(e.target.value)} 
                     className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#5EBBEC] focus:border-[#5EBBEC]" 
-                    placeholder="8-963-952 o Pasaporte"
+                    placeholder="00-0000-0000 o Pasaporte"
                   />
                 </div>
                 <div>
