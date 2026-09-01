@@ -73,46 +73,6 @@ fun formatFlexiblePhone(input: String): String {
     return input.filter { it.isDigit() || it == '+' || it == '-' || it == ' ' || it == '(' || it == ')' }.take(30)
 }
 
-fun formatPanamaCedula(input: String): String {
-    val clean = input.uppercase().trim()
-    val digitsOnly = clean.filter { it.isDigit() }
-    
-    // If it contains letters (PE, E, N, AV, PI), allow formatted letters + digits
-    if (clean.any { it.isLetter() }) {
-        val filtered = clean.filter { it.isLetterOrDigit() || it == '-' }
-        return filtered.take(16)
-    }
-    
-    if (digitsOnly.isEmpty()) return ""
-    
-    // Auto-format digits into 00-0000-0000
-    if (clean.contains("-")) {
-        val parts = clean.split("-").map { it.filter { c -> c.isDigit() } }
-        return parts.filter { it.isNotEmpty() }.joinToString("-").take(16)
-    }
-    
-    return when {
-        digitsOnly.length <= 2 -> digitsOnly
-        digitsOnly.length in 3..6 -> {
-            val p1 = digitsOnly.take(digitsOnly.length - 4.coerceAtMost(digitsOnly.length - 1))
-            val p2 = digitsOnly.drop(p1.length)
-            "$p1-$p2"
-        }
-        else -> {
-            val provLen = if (digitsOnly.startsWith("1") && digitsOnly.length >= 8 && digitsOnly[1] in '0'..'3') 2 else 1
-            val prov = digitsOnly.take(provLen)
-            val rest = digitsOnly.drop(provLen)
-            if (rest.length <= 4) {
-                "$prov-$rest"
-            } else {
-                val tomo = rest.take(4)
-                val asiento = rest.drop(4).take(5)
-                "$prov-$tomo-$asiento"
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistroScreen(
@@ -421,12 +381,7 @@ fun RegistroScreen(
             ) {
                 FilterChip(
                     selected = tipoDocumento == "Cédula",
-                    onClick = { 
-                        tipoDocumento = "Cédula"
-                        if (cedula.isNotBlank()) {
-                            cedula = formatPanamaCedula(cedula)
-                        }
-                    },
+                    onClick = { tipoDocumento = "Cédula" },
                     label = { Text("Cédula Panameña", fontWeight = if (tipoDocumento == "Cédula") FontWeight.Bold else FontWeight.Normal) },
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = Color(0xFF0D509E),
@@ -450,13 +405,7 @@ fun RegistroScreen(
             
             OutlinedTextField(
                 value = cedula,
-                onValueChange = { 
-                    cedula = if (tipoDocumento == "Cédula") {
-                        formatPanamaCedula(it)
-                    } else {
-                        it.uppercase().filter { c -> c.isLetterOrDigit() }.take(20)
-                    }
-                },
+                onValueChange = { cedula = it },
                 label = { Text(if (tipoDocumento == "Cédula") "Cédula (ej. 00-0000-0000) *" else "Número de Pasaporte *") },
                 placeholder = { Text(if (tipoDocumento == "Cédula") "00-0000-0000" else "PA12345678") },
                 modifier = Modifier.fillMaxWidth(),

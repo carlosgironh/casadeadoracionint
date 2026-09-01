@@ -1147,7 +1147,7 @@ fun AddAsistenteDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = cedula,
-                    onValueChange = { cedula = formatPanamaCedula(it) },
+                    onValueChange = { cedula = it },
                     label = { Text("Cédula o Pasaporte") },
                     placeholder = { Text("00-0000-0000 o Pasaporte") },
                     modifier = Modifier.fillMaxWidth(),
