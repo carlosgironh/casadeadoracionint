@@ -43,7 +43,11 @@ import com.casadeadoracionint.app.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit, onBackClick: () -> Unit = {}, onRegisterClick: () -> Unit = {}) {
+fun LoginScreen(
+    onLoginSuccess: () -> Unit,
+    onBackClick: (() -> Unit)? = null,
+    onRegisterClick: () -> Unit = {}
+) {
     var identifier by remember { mutableStateOf("") } // Can be email or username
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -66,15 +70,17 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onBackClick: () -> Unit = {}, onRegi
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.Rounded.ArrowBack, contentDescription = "Regresar", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-            )
+            if (onBackClick != null) {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(Icons.Rounded.ArrowBack, contentDescription = "Regresar", tint = Color.White)
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+                )
+            }
         },
         containerColor = Color.Transparent
     ) { paddingValues ->

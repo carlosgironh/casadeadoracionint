@@ -214,17 +214,16 @@ fun RegistroScreen(
                     } catch (e: Exception) {
                         e.printStackTrace() // Ignore if notification fails so registration proceeds
                     }
-                }
                 
-                onNavigateToLogin()
-            } catch (e: Exception) {
-                errorMessage = e.message ?: "Error al registrar"
-                e.printStackTrace()
-            } finally {
-                isLoading = false
+                    onNavigateToLogin()
+                } catch (e: Exception) {
+                    errorMessage = e.message ?: "Error al registrar"
+                    e.printStackTrace()
+                } finally {
+                    isLoading = false
+                }
             }
         }
-    }
 
     Column(
         modifier = modifier
