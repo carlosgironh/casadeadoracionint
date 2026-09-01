@@ -125,7 +125,8 @@ CREATE TABLE IF NOT EXISTS public.anuncios (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     titulo TEXT NOT NULL,
     contenido TEXT,
-    fecha TIMESTAMP WITH TIME ZONE,
+    imagen_url TEXT,
+    fecha TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -156,6 +157,47 @@ BEGIN
         EXECUTE format('CREATE POLICY "Permitir actualizacion a autenticados" ON public.%I FOR UPDATE TO authenticated USING (true)', t);
         EXECUTE format('CREATE POLICY "Permitir eliminacion a autenticados" ON public.%I FOR DELETE TO authenticated USING (true)', t);
     END LOOP;
+END $$;
+
+-- Configurar Bucket y Políticas para Storage (Imágenes de Anuncios)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('anuncios', 'anuncios', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' AND policyname = 'Permitir lectura publica anuncios'
+    ) THEN
+        CREATE POLICY "Permitir lectura publica anuncios" ON storage.objects
+        FOR SELECT TO public
+        USING (bucket_id = 'anuncios');
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' AND policyname = 'Permitir insercion autenticados anuncios'
+    ) THEN
+        CREATE POLICY "Permitir insercion autenticados anuncios" ON storage.objects
+        FOR INSERT TO authenticated
+        WITH CHECK (bucket_id = 'anuncios');
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' AND policyname = 'Permitir actualizacion autenticados anuncios'
+    ) THEN
+        CREATE POLICY "Permitir actualizacion autenticados anuncios" ON storage.objects
+        FOR UPDATE TO authenticated
+        USING (bucket_id = 'anuncios')
+        WITH CHECK (bucket_id = 'anuncios');
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' AND policyname = 'Permitir eliminacion autenticados anuncios'
+    ) THEN
+        CREATE POLICY "Permitir eliminacion autenticados anuncios" ON storage.objects
+        FOR DELETE TO authenticated
+        USING (bucket_id = 'anuncios');
+    END IF;
 END $$;
 
 -- ==========================================

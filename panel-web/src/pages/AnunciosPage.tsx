@@ -101,6 +101,7 @@ export default function AnunciosPage() {
           {
             titulo: newAnuncio.titulo,
             contenido: newAnuncio.contenido,
+            fecha: new Date().toISOString(),
             imagen_url: imageUrl,
           },
         ]);
@@ -110,9 +111,9 @@ export default function AnunciosPage() {
 
       closeModal();
       fetchAnuncios();
-    } catch (error) {
+    } catch (error: any) {
       console.error('[AnunciosPage] Error guardando anuncio:', error);
-      alert('Error al guardar el anuncio. Puede que el bucket "anuncios" no exista en Supabase o haya un problema de permisos.');
+      alert(`Error al guardar el anuncio: ${error?.message || 'Verifica la conexión y permisos de Supabase.'}`);
     } finally {
       setUploading(false);
     }
