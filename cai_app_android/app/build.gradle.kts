@@ -1,3 +1,11 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
@@ -10,10 +18,10 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("cai-release.jks")
-            storePassword = "CaiApp2026!"
-            keyAlias = "cai-key"
-            keyPassword = "CaiApp2026!"
+            storeFile = file(localProperties.getProperty("KEYSTORE_FILE", "cai-release.jks"))
+            storePassword = localProperties.getProperty("KEYSTORE_PASSWORD", "")
+            keyAlias = localProperties.getProperty("KEY_ALIAS", "")
+            keyPassword = localProperties.getProperty("KEY_PASSWORD", "")
         }
     }
 
@@ -22,7 +30,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 2
-        versionName = "1.0"
+        versionName = "1.1"
     }
 
     buildTypes {
@@ -106,13 +114,14 @@ dependencies {
   // Image loading
   implementation(libs.coil.compose)
 
-  // Supabase
-  implementation("io.github.jan-tennert.supabase:postgrest-kt:3.0.2")
-  implementation("io.github.jan-tennert.supabase:auth-kt:3.0.2")
+  // Supabase — versión actualizada
+  implementation("io.github.jan-tennert.supabase:postgrest-kt:3.1.4")
+  implementation("io.github.jan-tennert.supabase:auth-kt:3.1.4")
   
-  // Ktor client (required by Supabase)
-  implementation("io.ktor:ktor-client-android:3.0.0")
+  // Ktor client (required by Supabase) — versión actualizada
+  implementation("io.ktor:ktor-client-android:3.1.3")
   
   // Kotlin Serialization
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }
+

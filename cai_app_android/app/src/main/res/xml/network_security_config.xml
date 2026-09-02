@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Forzar HTTPS para todo el tráfico de red -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <!-- Supabase y servicios de radio usan HTTPS, no se necesita excepción -->
+</network-security-config>
