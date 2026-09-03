@@ -234,10 +234,13 @@ fun MainNavigation(isLoggedIn: Boolean, onLoginClick: () -> Unit, onLogoutClick:
     if (showNotificaciones) {
         AlertDialog(
             onDismissRequest = { showNotificaciones = false },
-            title = { Text("Notificaciones") },
+            containerColor = Color.White,
+            titleContentColor = Color(0xFF004D40),
+            textContentColor = Color(0xFF1E293B),
+            title = { Text("Notificaciones", fontWeight = FontWeight.Bold) },
             text = {
                 if (notificacionesList.isEmpty()) {
-                    Text("No tienes notificaciones.")
+                    Text("No tienes notificaciones.", color = Color(0xFF64748B))
                 } else {
                     androidx.compose.foundation.lazy.LazyColumn(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -249,7 +252,7 @@ fun MainNavigation(isLoggedIn: Boolean, onLoginClick: () -> Unit, onLogoutClick:
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = if (noti.leido) Color(0xFFF5F5F5) else Color(0xFFE3F2FD)
+                                    containerColor = if (noti.leido) Color(0xFFF1F5F9) else Color(0xFFE0F2FE)
                                 )
                             ) {
                                 androidx.compose.foundation.layout.Column(
@@ -258,7 +261,8 @@ fun MainNavigation(isLoggedIn: Boolean, onLoginClick: () -> Unit, onLogoutClick:
                                     Text(
                                         noti.mensaje,
                                         fontWeight = if (noti.leido) FontWeight.Normal else FontWeight.Bold,
-                                        fontSize = 14.sp
+                                        fontSize = 14.sp,
+                                        color = Color(0xFF1E293B)
                                     )
                                 }
                             }
@@ -267,12 +271,13 @@ fun MainNavigation(isLoggedIn: Boolean, onLoginClick: () -> Unit, onLogoutClick:
                 }
             },
             confirmButton = {
-                TextButton(onClick = {
-                    showNotificaciones = false
-                    
-                    val unreadIds = notificacionesList.filter { !it.leido }.map { it.id }
-                    if (unreadIds.isNotEmpty()) {
-                        scope.launch {
+                TextButton(
+                    onClick = {
+                        showNotificaciones = false
+                        
+                        val unreadIds = notificacionesList.filter { !it.leido }.map { it.id }
+                        if (unreadIds.isNotEmpty()) {
+                            scope.launch {
                             try {
                                 val params = kotlinx.serialization.json.buildJsonObject {
                                     put("leido", true)
@@ -292,8 +297,12 @@ fun MainNavigation(isLoggedIn: Boolean, onLoginClick: () -> Unit, onLogoutClick:
                             }
                         }
                     }
-                }) { Text("Cerrar") }
+                },
+                colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF004D40))
+            ) { 
+                Text("Cerrar", fontWeight = FontWeight.Bold, color = Color(0xFF004D40)) 
             }
-        )
-    }
+        }
+    )
+}
 }

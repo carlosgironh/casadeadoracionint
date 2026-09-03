@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Person
@@ -27,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +53,7 @@ fun LoginScreen(
 ) {
     var identifier by remember { mutableStateOf("") } // Can be email or username
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
     var forgotPasswordDialog by remember { mutableStateOf(false) }
@@ -89,16 +93,17 @@ fun LoginScreen(
                 .fillMaxSize()
                 .background(gradient)
                 .padding(paddingValues)
+                .imePadding()
                 .statusBarsPadding()
-                .navigationBarsPadding()
+                .navigationBarsPadding(),
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 32.dp, vertical = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Logo Container
                 Box(
@@ -163,7 +168,14 @@ fun LoginScreen(
                     onValueChange = { password = it.replace(" ", "") },
                     placeholder = { Text("Contraseña", color = Color.White.copy(alpha = 0.6f)) },
                     leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = Color.White) },
-                    visualTransformation = PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                        val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(imageVector = image, contentDescription = description, tint = Color.White)
+                        }
+                    },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
                     singleLine = true,
@@ -306,11 +318,18 @@ fun LoginScreen(
                             singleLine = true
                         )
                         Spacer(modifier = Modifier.height(12.dp))
+                        var resetPasswordVisible by remember { mutableStateOf(false) }
                         OutlinedTextField(
                             value = resetNewPassword,
                             onValueChange = { resetNewPassword = it },
                             label = { Text("Nueva Contraseña") },
-                            visualTransformation = PasswordVisualTransformation(),
+                            trailingIcon = {
+                                val image = if (resetPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                                IconButton(onClick = { resetPasswordVisible = !resetPasswordVisible }) {
+                                    Icon(imageVector = image, contentDescription = null)
+                                }
+                            },
+                            visualTransformation = if (resetPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
                         )

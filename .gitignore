@@ -1,2 +1,70 @@
+# Videos pesados
 LogoT1.mov
 LogoT2.mov
+*.mov
+*.mp4
+
+# ==============================================================================
+# SEGURIDAD Y FIRMAS (NUNCA subir a repositorios públicos o privados)
+# ==============================================================================
+*.jks
+*.keystore
+*.key
+*.pem
+*.p12
+*.pk8
+Firma/
+**/Firma/
+cai-release.jks
+**/cai-release.jks
+
+# Credenciales y variables de entorno
+local.properties
+**/local.properties
+.env
+.env.*
+!.env.example
+
+# ==============================================================================
+# BINARIOS Y PAQUETES DE DISTRIBUCIÓN (Evitar inflar el historial de Git)
+# ==============================================================================
+*.apk
+*.aab
+*.ap_
+*.dex
+docs_playstore/*.apk
+docs_playstore/*.aab
+docs_playstore/*.pem
+
+# Carpetas de pruebas temporales / capturas de prueba
+Pruebas_app_kmp/
+**/Pruebas_app_kmp/
+
+# ==============================================================================
+# BUILD Y CACHÉ (Gradle, Android, Kotlin)
+# ==============================================================================
+.gradle/
+**/build/
+build/
+.cxx/
+captures/
+.externalNativeBuild/
+
+# ==============================================================================
+# IDEs Y HERRAMIENTAS
+# ==============================================================================
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ==============================================================================
+# DEPENDENCIAS WEB / NODE
+# ==============================================================================
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+*.log
+
