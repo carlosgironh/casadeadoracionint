@@ -3,6 +3,7 @@ import type { User } from '@supabase/supabase-js';
 import { useSupabase } from './SupabaseContext';
 
 export interface SystemProfile {
+  id?: string;
   system_role: 'superadmin' | 'admin' | 'secretaria' | 'contabilidad' | 'soporte' | 'user';
   nombre_completo: string;
   nivel?: number;
@@ -10,6 +11,8 @@ export interface SystemProfile {
   telefono?: string;
   whatsapp?: string;
   cedula?: string;
+  equipo_id?: string;
+  conyuge_id?: string;
 }
 
 interface AuthContextType {
@@ -35,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const { data, error } = await supabase
           .from('usuarios')
-          .select('system_role, nombre_completo, nivel, username, telefono, whatsapp, cedula')
+          .select('id, system_role, nombre_completo, nivel, username, telefono, whatsapp, cedula, equipo_id, conyuge_id')
           .eq('id', userId)
           .single();
         

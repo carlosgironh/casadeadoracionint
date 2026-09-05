@@ -81,8 +81,16 @@ fun CelugramaScreen(modifier: Modifier = Modifier) {
                 if (usuarioDB?.pendiente_aprobacion == true) {
                     isPendiente = true
                 } else {
+                    val misLideresIds = listOfNotNull(currentUser.id, usuarioDB?.conyuge_id)
                     celulasList = Supabase.client.from("celulas")
-                        .select { filter { eq("lider_id", currentUser.id) } }
+                        .select { 
+                            filter { 
+                                or {
+                                    isIn("lider_id", misLideresIds)
+                                    isIn("colider_id", misLideresIds)
+                                }
+                            } 
+                        }
                         .decodeList<Celula>()
                     celulaActual = celulasList.firstOrNull()
                 }
@@ -567,8 +575,13 @@ fun CelugramaForm(celulaActual: Celula, modifier: Modifier = Modifier) {
         if (currentUser != null) {
             scope.launch {
                 try {
+                    val miUsuario = Supabase.client.from("usuarios")
+                        .select { filter { eq("id", currentUser.id) } }
+                        .decodeSingleOrNull<Usuario>()
+                    val misLideresIds = listOfNotNull(currentUser.id, miUsuario?.conyuge_id)
+
                     val fetched = Supabase.client.from("asistentes_celula")
-                        .select { filter { eq("lider_id", currentUser.id) } }
+                        .select { filter { isIn("lider_id", misLideresIds) } }
                         .decodeList<AsistenteCelula>()
                     discipulos = fetched
                     // By default, everyone is unchecked initially, or we leave whatever state is there

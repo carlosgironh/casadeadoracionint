@@ -118,8 +118,12 @@ export default function InformesPage() {
       
       let result = data as any[];
       if (!isAdmin && user) {
+        const conyugeId = profile?.conyuge_id;
         result = result.filter(item => 
-          item.lider_id === user.id || item.usuarios?.lider_directo_id === user.id
+          item.lider_id === user.id || 
+          (conyugeId && item.lider_id === conyugeId) ||
+          item.usuarios?.lider_directo_id === user.id ||
+          (conyugeId && item.usuarios?.lider_directo_id === conyugeId)
         );
       }
       return result as Informe[];
@@ -127,7 +131,7 @@ export default function InformesPage() {
   });
 
   const { data: celulas, isLoading: isLoadingCelulas } = useQuery({
-    queryKey: ['celulas', user?.id, isAdmin],
+    queryKey: ['celulas', user?.id, profile?.conyuge_id, isAdmin],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('celulas')
@@ -138,8 +142,14 @@ export default function InformesPage() {
       
       let result = data as any[];
       if (!isAdmin && user) {
+        const conyugeId = profile?.conyuge_id;
         result = result.filter(item => 
-          item.lider_id === user.id || item.usuarios?.lider_directo_id === user.id
+          item.lider_id === user.id || 
+          (conyugeId && item.lider_id === conyugeId) ||
+          item.colider_id === user.id ||
+          (conyugeId && item.colider_id === conyugeId) ||
+          item.usuarios?.lider_directo_id === user.id ||
+          (conyugeId && item.usuarios?.lider_directo_id === conyugeId)
         );
       }
       return result as Celula[];

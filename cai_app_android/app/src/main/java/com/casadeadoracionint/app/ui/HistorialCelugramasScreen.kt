@@ -44,9 +44,14 @@ fun HistorialCelugramasScreen(onBackClick: () -> Unit) {
             try {
                 val currentUser = Supabase.client.auth.currentUserOrNull()
                 if (currentUser != null) {
+                    val miUsuario = Supabase.client.from("usuarios")
+                        .select { filter { eq("id", currentUser.id) } }
+                        .decodeSingleOrNull<com.casadeadoracionint.app.data.Usuario>()
+                    val misLideresIds = listOfNotNull(currentUser.id, miUsuario?.conyuge_id)
+
                     informes = Supabase.client.from("informes_celula")
                         .select {
-                            filter { eq("lider_id", currentUser.id) }
+                            filter { isIn("lider_id", misLideresIds) }
                             order("fecha_reunion", io.github.jan.supabase.postgrest.query.Order.DESCENDING)
                         }
                         .decodeList<InformeSimple>()

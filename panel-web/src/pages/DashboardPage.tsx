@@ -67,13 +67,22 @@ export default function DashboardPage() {
         // LEADER MODE: Fetch and filter
         if (!user) return { totalCelulas: 0, totalMiembros: 0, informesSemana: 0, totalConvertidos: 0, asistenciaHistorial: [] };
 
+        const conyugeId = profile?.conyuge_id;
+
         // Celulas
         const { data: celulasData } = await supabase
           .from('celulas')
-          .select('lider_id, usuarios!celulas_lider_id_fkey(lider_directo_id)');
+          .select('lider_id, colider_id, usuarios!celulas_lider_id_fkey(lider_directo_id)');
         
         if (celulasData) {
-          totalCelulas = celulasData.filter((c: any) => c.lider_id === user.id || c.usuarios?.lider_directo_id === user.id).length;
+          totalCelulas = celulasData.filter((c: any) => 
+            c.lider_id === user.id || 
+            (conyugeId && c.lider_id === conyugeId) ||
+            c.colider_id === user.id ||
+            (conyugeId && c.colider_id === conyugeId) ||
+            c.usuarios?.lider_directo_id === user.id ||
+            (conyugeId && c.usuarios?.lider_directo_id === conyugeId)
+          ).length;
         }
 
         // Miembros (discípulos)
@@ -84,8 +93,9 @@ export default function DashboardPage() {
           .lte('nivel', 6);
           
         if (usuariosData) {
-          // You count as a member your direct disciples
-          totalMiembros = usuariosData.filter(u => u.lider_directo_id === user.id).length;
+          totalMiembros = usuariosData.filter(u => 
+            u.lider_directo_id === user.id || (conyugeId && u.lider_directo_id === conyugeId)
+          ).length;
         }
 
         // Informes
@@ -94,7 +104,12 @@ export default function DashboardPage() {
           .select('lider_id, fecha_reunion, nuevos_convertidos, asistencia_total, usuarios!informes_celula_lider_id_fkey(lider_directo_id)');
           
         if (informesData) {
-          const myInformes = informesData.filter((i: any) => i.lider_id === user.id || i.usuarios?.lider_directo_id === user.id);
+          const myInformes = informesData.filter((i: any) => 
+            i.lider_id === user.id || 
+            (conyugeId && i.lider_id === conyugeId) ||
+            i.usuarios?.lider_directo_id === user.id ||
+            (conyugeId && i.usuarios?.lider_directo_id === conyugeId)
+          );
           
           informesSemana = myInformes.filter(i => new Date(i.fecha_reunion) >= inicioSemana).length;
           totalConvertidos = myInformes

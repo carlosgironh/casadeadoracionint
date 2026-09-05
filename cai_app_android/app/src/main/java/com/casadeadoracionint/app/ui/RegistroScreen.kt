@@ -239,7 +239,7 @@ fun RegistroScreen(
                         filter {
                             eq("equipo_id", selectedEquipo!!.id)
                         }
-                    }.decodeList<Usuario>()
+                    }.decodeList<Usuario>().distinctBy { it.id }
 
                     val msg = "¡Un nuevo líder ($nombreCompleto) se ha registrado bajo tu equipo y está pendiente de aprobación!"
                     val notificaciones = teamLeaders.map {

@@ -12,7 +12,7 @@ export default function OrganigramaPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('usuarios')
-        .select('id, nombre_completo, email, nivel, system_role, telefono, whatsapp, username, cedula, activo')
+        .select('id, nombre_completo, email, nivel, system_role, telefono, whatsapp, username, cedula, activo, conyuge_id, equipo_id')
         .order('nivel', { ascending: true });
       
       if (error) throw error;
@@ -43,6 +43,7 @@ export default function OrganigramaPage() {
   const [editWhatsapp, setEditWhatsapp] = useState('');
   const [editNivel, setEditNivel] = useState(5);
   const [editSystemRole, setEditSystemRole] = useState('user');
+  const [editConyugeId, setEditConyugeId] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   // Crear
@@ -80,6 +81,7 @@ export default function OrganigramaPage() {
     setEditWhatsapp(user.whatsapp || '');
     setEditNivel(user.nivel ?? 6);
     setEditSystemRole(user.system_role || 'user');
+    setEditConyugeId(user.conyuge_id || '');
   };
 
   const saveUserChanges = async () => {
@@ -102,6 +104,12 @@ export default function OrganigramaPage() {
     
     setIsSaving(false);
     if (!error) {
+      if (editConyugeId !== (selectedUser.conyuge_id || '')) {
+        await supabase
+          .from('usuarios')
+          .update({ conyuge_id: editConyugeId || null })
+          .eq('id', selectedUser.id);
+      }
       setSelectedUser(null);
       refetch();
     } else {
@@ -494,6 +502,22 @@ export default function OrganigramaPage() {
                   <option value={5}>5 - Líderes de Célula</option>
                   <option value={6}>6 - Miembros</option>
                   <option value={7}>7 - Sin nivel eclesiástico (No contar)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Cónyuge (Matrimonio)</label>
+                <select 
+                  value={editConyugeId}
+                  onChange={(e) => setEditConyugeId(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-[#5EBBEC] focus:border-[#5EBBEC]"
+                >
+                  <option value="">Sin Cónyuge Asignado</option>
+                  {usuarios?.filter(u => u.id !== selectedUser?.id).map(u => (
+                    <option key={u.id} value={u.id}>
+                      {u.nombre_completo} ({u.email || u.username})
+                    </option>
+                  ))}
                 </select>
               </div>
 

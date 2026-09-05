@@ -81,11 +81,12 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                     .decodeSingleOrNull<Usuario>()
                 
                 val miEquipoId = miUsuario?.equipo_id
+                val misLideresIds = listOfNotNull(currentUser.id, miUsuario?.conyuge_id)
 
                 val fetchedDiscipulos = Supabase.client.from("asistentes_celula")
                     .select {
                         filter {
-                            eq("lider_id", currentUser.id)
+                            isIn("lider_id", misLideresIds)
                         }
                     }
                     .decodeList<AsistenteCelula>()
@@ -96,7 +97,7 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                             if (miEquipoId != null) {
                                 eq("equipo_lider_id", miEquipoId)
                             } else {
-                                eq("lider_directo_id", currentUser.id)
+                                isIn("lider_directo_id", misLideresIds)
                             }
                         }
                     }
@@ -107,7 +108,10 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                     Supabase.client.from("celulas")
                         .select {
                             filter {
-                                isIn("lider_id", fetchedLideresIds)
+                                or {
+                                    isIn("lider_id", fetchedLideresIds)
+                                    isIn("colider_id", fetchedLideresIds)
+                                }
                             }
                         }
                         .decodeList<Celula>()
@@ -134,6 +138,11 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
         if (currentUser == null || cedula.isBlank()) return
         scope.launch {
             try {
+                val miUsuario = Supabase.client.from("usuarios")
+                    .select { filter { eq("id", currentUser.id) } }
+                    .decodeSingleOrNull<Usuario>()
+                val misLideresIds = listOfNotNull(currentUser.id, miUsuario?.conyuge_id)
+
                 // Check if disciple exists
                 val results = Supabase.client.from("asistentes_celula")
                     .select { filter { eq("cedula", cedula) } }
@@ -141,8 +150,8 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                 
                 if (results.isNotEmpty()) {
                     val discipulo = results.first()
-                    // Reclaim if belongs to another
-                    if (discipulo.lider_id != currentUser.id) {
+                    // Reclaim if belongs to another marriage/leader
+                    if (!misLideresIds.contains(discipulo.lider_id)) {
                         Supabase.client.from("asistentes_celula")
                             .update(mapOf("lider_id" to currentUser.id)) {
                                 filter { eq("id", discipulo.id) }

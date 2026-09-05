@@ -168,5 +168,6 @@ data class Usuario(
     val ministerio: String? = null,
     val pendiente_aprobacion: Boolean? = false,
     val whatsapp: String? = null,
-    val direccion: String? = null
+    val direccion: String? = null,
+    val conyuge_id: String? = null
 )
