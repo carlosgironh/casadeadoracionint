@@ -5,11 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && npm run build:pwa",
+    "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "deploy": "vercel --prod",
-    "build:pwa": "npm run build --prefix ../pwa-ios"
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.10",

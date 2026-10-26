@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useAuth } from '../contexts/AuthContext';
 import { LogOut, User, Mail, Shield, CheckCircle, Clock } from 'lucide-react';
 
@@ -57,3 +57,4 @@ export default function PerfilPage() {
     </div>
   );
 }
+

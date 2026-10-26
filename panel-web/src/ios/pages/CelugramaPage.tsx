@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Send, CheckCircle, AlertCircle, History, Sparkles, DollarSign, Users, UserPlus } from 'lucide-react';
@@ -8,7 +8,7 @@ interface CelugramaPageProps {
 }
 
 export default function CelugramaPage({ onViewHistory }: CelugramaPageProps) {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [nombreCelula, setNombreCelula] = useState('');
   const [lugar, setLugar] = useState('');
   const [fechaReunion, setFechaReunion] = useState(new Date().toISOString().split('T')[0]);
@@ -305,3 +305,4 @@ export default function CelugramaPage({ onViewHistory }: CelugramaPageProps) {
     </div>
   );
 }
+

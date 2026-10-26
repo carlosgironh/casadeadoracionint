@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import CupertinoTabBar, { TabType } from './CupertinoTabBar';
+import { useState } from 'react';
+import CupertinoTabBar from './CupertinoTabBar';
+import type { TabType } from './CupertinoTabBar';
 import RadioPage from '../pages/RadioPage';
 import CelugramaPage from '../pages/CelugramaPage';
 import HistorialCelugramasPage from '../pages/HistorialCelugramasPage';
@@ -35,3 +36,4 @@ export default function AppLayout() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Share, PlusSquare, Smartphone, Sparkles, ArrowDown } from 'lucide-react';
 
 export default function InstallTutorialScreen() {
@@ -89,3 +89,4 @@ export default function InstallTutorialScreen() {
     </div>
   );
 }
+

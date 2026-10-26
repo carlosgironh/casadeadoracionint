@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { ArrowLeft, Calendar, Users, DollarSign, Clock, CheckCircle2, XCircle } from 'lucide-react';
@@ -102,3 +102,4 @@ export default function HistorialCelugramasPage({ onBack }: HistorialCelugramasP
     </div>
   );
 }
+

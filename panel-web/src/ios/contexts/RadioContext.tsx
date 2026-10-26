@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 const RADIO_STREAM_URL = 'https://studio20.radiolize.com/radio/8050/radio.mp3';
 
@@ -132,3 +132,4 @@ export function useRadio() {
   }
   return context;
 }
+

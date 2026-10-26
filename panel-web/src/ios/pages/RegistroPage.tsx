@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { User, Mail, Lock, Phone, AlertCircle, CheckCircle } from 'lucide-react';
 
@@ -173,3 +173,4 @@ export default function RegistroPage({ onSwitchToLogin }: RegistroPageProps) {
     </div>
   );
 }
+

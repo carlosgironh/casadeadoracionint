@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase, AsistenteItem } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
+import type { AsistenteItem } from '../lib/supabase';
 import { Users, Search, Phone, MessageCircle, UserPlus, Sparkles, X, Check } from 'lucide-react';
 
 export default function DiscipulosPage() {
@@ -215,3 +216,4 @@ export default function DiscipulosPage() {
     </div>
   );
 }
+

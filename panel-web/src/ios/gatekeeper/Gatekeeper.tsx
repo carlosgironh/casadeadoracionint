@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { getDeviceState, DeviceState } from './deviceDetector';
+import { useEffect, useState } from 'react';
+import { getDeviceState } from './deviceDetector';
+import type { DeviceState } from './deviceDetector';
 import InstallTutorialScreen from './InstallTutorialScreen';
 
 interface GatekeeperProps {
@@ -48,3 +49,4 @@ export default function Gatekeeper({ children }: GatekeeperProps) {
   // ios-standalone: acceso total
   return <>{children}</>;
 }
+

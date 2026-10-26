@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { supabase, AnuncioItem } from '../lib/supabase';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import type { AnuncioItem } from '../lib/supabase';
 import { Bell, BookOpen, Calendar, ChevronRight, X, Sparkles } from 'lucide-react';
 
 export default function RecursosPage() {
@@ -172,3 +173,4 @@ export default function RecursosPage() {
     </div>
   );
 }
+

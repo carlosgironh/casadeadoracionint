@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Radio, ClipboardList, Users, BookOpen, User } from 'lucide-react';
 import { useRadio } from '../contexts/RadioContext';
 
@@ -51,3 +51,4 @@ export default function CupertinoTabBar({ activeTab, onChangeTab }: CupertinoTab
     </nav>
   );
 }
+

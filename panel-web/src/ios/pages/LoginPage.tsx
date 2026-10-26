@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Lock, Mail, Eye, EyeOff, Sparkles, AlertCircle } from 'lucide-react';
 
@@ -150,3 +150,4 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
     </div>
   );
 }
+

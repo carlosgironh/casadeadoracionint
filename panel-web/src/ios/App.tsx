@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Gatekeeper from './gatekeeper/Gatekeeper';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { RadioProvider } from './contexts/RadioContext';
@@ -40,3 +40,4 @@ export default function App() {
     </Gatekeeper>
   );
 }
+
