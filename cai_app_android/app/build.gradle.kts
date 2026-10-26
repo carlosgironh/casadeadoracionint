@@ -26,11 +26,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.casadeadoracionint.lideres"
+        applicationId = "com.casadeadoracionint.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.5"
+        versionCode = 6
+        versionName = "1.0.6"
     }
 
     buildTypes {

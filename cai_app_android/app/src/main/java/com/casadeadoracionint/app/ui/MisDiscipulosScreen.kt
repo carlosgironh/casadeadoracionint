@@ -12,12 +12,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.*
+import com.casadeadoracionint.app.ui.components.CaiIconButton
+import com.casadeadoracionint.app.ui.components.CaiPillButton
+import com.casadeadoracionint.app.ui.components.CaiPrimaryButton
+import com.casadeadoracionint.app.ui.components.CaiSecondaryButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -315,12 +321,15 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                 Text("Mis Discípulos", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF004D40))
                 Text("Gestión de tu célula", fontSize = 14.sp, color = Color.Gray)
             }
-            IconButton(
+            CaiIconButton(
+                icon = Icons.Filled.Add,
                 onClick = { showAddDialog = true },
-                modifier = Modifier.background(Color(0xFF0D509E), RoundedCornerShape(12.dp))
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Reclamar Discípulo", tint = Color.White)
-            }
+                contentDescription = "Reclamar Discípulo",
+                containerColor = Color(0xFF0D509E),
+                size = 46.dp,
+                shape = RoundedCornerShape(14.dp),
+                elevation = 4.dp
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -398,14 +407,14 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                                     }
                                 }
                                 if (lider.pendiente_aprobacion == true) {
-                                    Button(
+                                    CaiPillButton(
+                                        text = "Aprobar",
                                         onClick = { aprobarLider(lider.id) },
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00796B)),
-                                        shape = RoundedCornerShape(24.dp),
-                                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
-                                    ) {
-                                        Text("Aprobar", color = Color.White, fontSize = 14.sp)
-                                    }
+                                        icon = Icons.Filled.Check,
+                                        containerColor = Color(0xFF00796B),
+                                        contentColor = Color.White,
+                                        elevation = 3.dp
+                                    )
                                 }
                             }
                         }
@@ -486,11 +495,16 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                             color = Color(0xFF007F7F)
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(
-                                onClick = { showCrearEquipoDialog = true }
-                            ) {
-                                Icon(Icons.Filled.Add, contentDescription = "Crear Equipo", tint = Color(0xFF007F7F))
-                            }
+                            CaiIconButton(
+                                icon = Icons.Filled.Add,
+                                onClick = { showCrearEquipoDialog = true },
+                                contentDescription = "Crear Equipo",
+                                containerColor = Color(0xFF007F7F),
+                                size = 34.dp,
+                                shape = RoundedCornerShape(10.dp),
+                                elevation = 2.dp
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
                             Icon(
                                 imageVector = if (expandEquipos) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                                 contentDescription = "Expandir/Colapsar",
@@ -526,19 +540,19 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
                                         Text("Equipo ${index + 1}", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF1F2937))
                                         Text("Día: ${equipo.dia_reunion ?: "N/A"} - ${equipo.hora_reunion ?: ""}", fontSize = 14.sp, color = Color.Gray)
                                     }
-                                    Button(
+                                    CaiPillButton(
+                                        text = buttonText,
                                         onClick = { 
                                             celulaToReassign = equipo
                                             newLiderIdToReassign = equipo.lider_id
                                             newColiderIdToReassign = equipo.colider_id ?: ""
                                             showReasignarDialog = true 
                                         },
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD97706)),
-                                        shape = RoundedCornerShape(24.dp),
-                                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
-                                    ) {
-                                        Text(buttonText, color = Color.White, fontSize = 14.sp, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
-                                    }
+                                        icon = Icons.Filled.SwapHoriz,
+                                        containerColor = Color(0xFFD97706),
+                                        contentColor = Color.White,
+                                        elevation = 3.dp
+                                    )
                                 }
                             }
                         }
@@ -568,14 +582,18 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
             confirmButton = {
                 Button(
                     onClick = { reclamarDiscipulo(cedulaToClaim) },
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F7F))
                 ) {
-                    Text("Reclamar")
+                    Text("Reclamar", fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showAddDialog = false }) {
-                    Text("Cancelar", color = Color.Gray)
+                TextButton(
+                    onClick = { showAddDialog = false },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Cancelar", color = Color.Gray, fontWeight = FontWeight.SemiBold)
                 }
             }
         )
@@ -601,14 +619,18 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
             confirmButton = {
                 Button(
                     onClick = { crearEquipo(nombreEquipoToCreate) },
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F7F))
                 ) {
-                    Text("Crear")
+                    Text("Crear", fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showCrearEquipoDialog = false }) {
-                    Text("Cancelar", color = Color.Gray)
+                TextButton(
+                    onClick = { showCrearEquipoDialog = false },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Cancelar", color = Color.Gray, fontWeight = FontWeight.SemiBold)
                 }
             }
         )
@@ -668,14 +690,18 @@ fun MisDiscipulosScreen(modifier: Modifier = Modifier) {
             confirmButton = {
                 Button(
                     onClick = { reasignarEquipo() },
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD97706))
                 ) {
-                    Text("Guardar Cambios")
+                    Text("Guardar Cambios", fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showReasignarDialog = false }) {
-                    Text("Cancelar", color = Color.Gray)
+                TextButton(
+                    onClick = { showReasignarDialog = false },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Cancelar", color = Color.Gray, fontWeight = FontWeight.SemiBold)
                 }
             }
         )
@@ -796,14 +822,18 @@ fun EditUsuarioDialog(
                         ))
                     }
                 },
+                shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00796B))
             ) {
-                Text("Guardar Cambios")
+                Text("Guardar Cambios", fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+            TextButton(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text("Cancelar", fontWeight = FontWeight.SemiBold)
             }
         }
     )

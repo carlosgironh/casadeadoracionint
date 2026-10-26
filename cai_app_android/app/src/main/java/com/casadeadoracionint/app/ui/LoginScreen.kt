@@ -373,14 +373,19 @@ fun LoginScreen(
                             }
                         }
                     },
-                    enabled = !isResetLoading
+                    enabled = !isResetLoading,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D47A1))
                 ) {
-                    Text(if (resetStep == 1) "Enviar Código" else "Actualizar")
+                    Text(if (resetStep == 1) "Enviar Código" else "Actualizar", fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { forgotPasswordDialog = false }) {
-                    Text("Cancelar")
+                TextButton(
+                    onClick = { forgotPasswordDialog = false },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Cancelar", fontWeight = FontWeight.SemiBold)
                 }
             }
         )

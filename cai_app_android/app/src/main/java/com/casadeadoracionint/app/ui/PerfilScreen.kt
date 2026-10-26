@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LockReset
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
+import com.casadeadoracionint.app.ui.components.CaiPrimaryButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -152,7 +156,8 @@ fun PerfilScreen(supabaseClient: SupabaseClient, modifier: Modifier = Modifier) 
                 
                 Spacer(modifier = Modifier.height(24.dp))
                 
-                Button(
+                CaiPrimaryButton(
+                    text = "Guardar Cambios",
                     onClick = {
                         isLoading = true
                         errorMessage = ""
@@ -180,13 +185,12 @@ fun PerfilScreen(supabaseClient: SupabaseClient, modifier: Modifier = Modifier) 
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F7F)),
-                    enabled = !isLoading
-                ) {
-                    Text("Guardar Cambios", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                }
+                    modifier = Modifier.fillMaxWidth(),
+                    icon = Icons.Filled.Save,
+                    isLoading = isLoading,
+                    enabled = !isLoading,
+                    gradientColors = listOf(Color(0xFF00796B), Color(0xFF004D40))
+                )
             }
         }
         
@@ -214,11 +218,12 @@ fun PerfilScreen(supabaseClient: SupabaseClient, modifier: Modifier = Modifier) 
                 
                 Spacer(modifier = Modifier.height(24.dp))
                 
-                Button(
+                CaiPrimaryButton(
+                    text = "Actualizar Contraseña",
                     onClick = {
                         if (newPassword.length < 6) {
                             errorMessage = "La contraseña debe tener al menos 6 caracteres"
-                            return@Button
+                            return@CaiPrimaryButton
                         }
                         isLoading = true
                         errorMessage = ""
@@ -237,13 +242,12 @@ fun PerfilScreen(supabaseClient: SupabaseClient, modifier: Modifier = Modifier) 
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
-                    enabled = !isLoading
-                ) {
-                    Text("Actualizar Contraseña", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                }
+                    modifier = Modifier.fillMaxWidth(),
+                    icon = Icons.Filled.LockReset,
+                    isLoading = isLoading,
+                    enabled = !isLoading,
+                    gradientColors = listOf(Color(0xFFDC2626), Color(0xFF991B1B))
+                )
             }
         }
     }

@@ -9,9 +9,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
+import com.casadeadoracionint.app.ui.components.CaiPrimaryButton
+import com.casadeadoracionint.app.ui.components.CaiSecondaryButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -667,29 +670,25 @@ fun RegistroScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
+            CaiPrimaryButton(
+                text = "Validar y Registrar",
                 onClick = { handleRegister() },
-                modifier = Modifier.fillMaxWidth().height(52.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F7F)),
-                shape = RoundedCornerShape(12.dp),
-                enabled = !isLoading
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-                } else {
-                    Text("Validar y Registrar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                }
-            }
+                modifier = Modifier.fillMaxWidth(),
+                icon = Icons.Filled.CheckCircle,
+                isLoading = isLoading,
+                enabled = !isLoading,
+                gradientColors = listOf(Color(0xFF00796B), Color(0xFF004D40))
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
-            
-            Text(
+
+            CaiSecondaryButton(
                 text = "Volver al Login",
-                color = Color(0xFF0D509E),
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
-                    .clickable { onNavigateToLogin() }
-                    .padding(8.dp)
+                onClick = { onNavigateToLogin() },
+                modifier = Modifier.fillMaxWidth(),
+                borderColor = Color(0xFF0D509E),
+                contentColor = Color(0xFF0D509E),
+                height = 48.dp
             )
 
             Spacer(modifier = Modifier.height(24.dp))

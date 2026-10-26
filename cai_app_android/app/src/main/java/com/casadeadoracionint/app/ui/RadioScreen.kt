@@ -11,6 +11,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import com.casadeadoracionint.app.ui.components.CaiPillButton
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -144,9 +148,15 @@ fun RadioScreen(modifier: Modifier = Modifier, isLoggedIn: Boolean = false, onLo
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
                 actions = {
                     if (!isLoggedIn) {
-                        TextButton(onClick = onLoginClick) {
-                            Text("Ingresar Líder", color = Color(0xFF0D47A1), fontWeight = FontWeight.Bold)
-                        }
+                        CaiPillButton(
+                            text = "Ingresar Líder",
+                            onClick = onLoginClick,
+                            icon = Icons.Rounded.Person,
+                            containerColor = Color(0xFF0D47A1),
+                            contentColor = Color.White,
+                            elevation = 4.dp,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
                     } else {
                         Box {
                             IconButton(onClick = { showMenu = !showMenu }) {
@@ -247,36 +257,74 @@ fun RadioScreen(modifier: Modifier = Modifier, isLoggedIn: Boolean = false, onLo
 
             Spacer(modifier = Modifier.height(64.dp))
 
-            // Play/Pause Button
-            Surface(
-                shape = CircleShape,
-                color = if (isPlaying) Color(0xFF0D47A1) else Color(0xFF37474F),
-                modifier = Modifier
-                    .size(80.dp)
-                    .clickable {
-                        mediaController?.let {
-                            if (it.isPlaying) {
-                                it.pause()
-                            } else {
-                                if (it.playbackState == Player.STATE_IDLE) {
-                                    it.prepare()
+            // Play/Pause Button with pulse and tactile feedback
+            val playInteractionSource = remember { MutableInteractionSource() }
+            val isPlayPressed by playInteractionSource.collectIsPressedAsState()
+            val playScale by animateFloatAsState(
+                targetValue = if (isPlayPressed) 0.92f else 1f,
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                label = "play_scale"
+            )
+
+            val pulseTransition = rememberInfiniteTransition(label = "pulse_transition")
+            val pulseScale by pulseTransition.animateFloat(
+                initialValue = 1f,
+                targetValue = 1.15f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(1200, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "pulse_scale"
+            )
+
+            Box(
+                modifier = Modifier.size(96.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (isPlaying) {
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .scale(pulseScale)
+                            .clip(CircleShape)
+                            .background(Color(0xFF0D47A1).copy(alpha = 0.25f))
+                    )
+                }
+
+                Surface(
+                    shape = CircleShape,
+                    color = if (isPlaying) Color(0xFF0D47A1) else Color(0xFF37474F),
+                    modifier = Modifier
+                        .size(80.dp)
+                        .scale(playScale)
+                        .shadow(if (isPlayPressed) 6.dp else 16.dp, CircleShape)
+                        .clickable(
+                            interactionSource = playInteractionSource,
+                            indication = null
+                        ) {
+                            mediaController?.let {
+                                if (it.isPlaying) {
+                                    it.pause()
+                                } else {
+                                    if (it.playbackState == Player.STATE_IDLE) {
+                                        it.prepare()
+                                    }
+                                    it.play()
                                 }
-                                it.play()
                             }
                         }
-                    },
-                shadowElevation = 16.dp
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    if (isBuffering) {
-                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(32.dp), strokeWidth = 3.dp)
-                    } else {
-                        Icon(
-                            imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                            contentDescription = "Play/Pause",
-                            tint = Color.White,
-                            modifier = Modifier.size(40.dp)
-                        )
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        if (isBuffering) {
+                            CircularProgressIndicator(color = Color.White, modifier = Modifier.size(32.dp), strokeWidth = 3.dp)
+                        } else {
+                            Icon(
+                                imageVector = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
+                                contentDescription = "Play/Pause",
+                                tint = Color.White,
+                                modifier = Modifier.size(40.dp)
+                            )
+                        }
                     }
                 }
             }

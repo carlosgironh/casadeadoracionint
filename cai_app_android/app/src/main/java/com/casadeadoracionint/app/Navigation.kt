@@ -3,6 +3,7 @@ package com.casadeadoracionint.app
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Campaign
@@ -298,10 +299,11 @@ fun MainNavigation(isLoggedIn: Boolean, onLoginClick: () -> Unit, onLogoutClick:
                         }
                     }
                 },
-                colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF004D40))
-            ) { 
-                Text("Cerrar", fontWeight = FontWeight.Bold, color = Color(0xFF004D40)) 
-            }
+                    colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF004D40)),
+                    shape = RoundedCornerShape(12.dp)
+                ) { 
+                    Text("Cerrar", fontWeight = FontWeight.Bold, color = Color(0xFF004D40)) 
+                }
         }
     )
 }

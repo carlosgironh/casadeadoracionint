@@ -9,8 +9,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddLocationAlt
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
+import com.casadeadoracionint.app.ui.components.CaiPrimaryButton
+import com.casadeadoracionint.app.ui.components.CaiSecondaryButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -470,9 +475,10 @@ fun AperturaCelulaForm(onCelulaCreada: (Celula) -> Unit, modifier: Modifier = Mo
         
         Spacer(modifier = Modifier.height(32.dp))
         
-        Button(
+        CaiPrimaryButton(
+            text = "Registrar Célula",
             onClick = {
-                if (currentUser == null) return@Button
+                if (currentUser == null) return@CaiPrimaryButton
                 isLoading = true
                 scope.launch {
                     try {
@@ -501,17 +507,12 @@ fun AperturaCelulaForm(onCelulaCreada: (Celula) -> Unit, modifier: Modifier = Mo
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F7F)),
-            enabled = !isLoading && selectedZona != null && direccion.isNotBlank()
-        ) {
-            if (isLoading) {
-                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-            } else {
-                Text("Registrar Célula", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            }
-        }
+            modifier = Modifier.fillMaxWidth(),
+            icon = Icons.Filled.AddLocationAlt,
+            isLoading = isLoading,
+            enabled = !isLoading && selectedZona != null && direccion.isNotBlank(),
+            gradientColors = listOf(Color(0xFF00796B), Color(0xFF004D40))
+        )
     }
 }
 
@@ -821,19 +822,15 @@ fun CelugramaForm(celulaActual: Celula, modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Button(
+        CaiPrimaryButton(
+            text = "Enviar Celugrama",
             onClick = { enviarCelugrama() },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F7F)),
-            enabled = !isLoadingEnvio
-        ) {
-            if (isLoadingEnvio) {
-                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-            } else {
-                Text("Enviar Celugrama", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            }
-        }
+            modifier = Modifier.fillMaxWidth(),
+            icon = Icons.Filled.Send,
+            isLoading = isLoadingEnvio,
+            enabled = !isLoadingEnvio,
+            gradientColors = listOf(Color(0xFF00796B), Color(0xFF004D40))
+        )
     }
 
     if (showAddDialog) {
@@ -1074,7 +1071,8 @@ fun DatosCelulaForm(celula: Celula, onSaved: (Celula) -> Unit, modifier: Modifie
 
         Spacer(modifier = Modifier.height(24.dp))
         
-        Button(
+        CaiPrimaryButton(
+            text = "Guardar Datos",
             onClick = {
                 scope.launch {
                     isSaving = true
@@ -1100,12 +1098,12 @@ fun DatosCelulaForm(celula: Celula, onSaved: (Celula) -> Unit, modifier: Modifie
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00796B)),
-            enabled = !isSaving
-        ) {
-            Text(if (isSaving) "Guardando..." else "Guardar Datos")
-        }
+            modifier = Modifier.fillMaxWidth(),
+            icon = Icons.Filled.Save,
+            isLoading = isSaving,
+            enabled = !isSaving,
+            gradientColors = listOf(Color(0xFF00796B), Color(0xFF004D40))
+        )
 
         if (showSuccess) {
             Spacer(modifier = Modifier.height(16.dp))
@@ -1283,14 +1281,19 @@ fun AddAsistenteDialog(
                             dirige_discipulado = growthLevels[15]
                         ))
                     }
-                }
+                },
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00796B))
             ) {
-                Text("Guardar")
+                Text("Guardar", fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+            TextButton(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text("Cancelar", fontWeight = FontWeight.SemiBold)
             }
         }
     )
