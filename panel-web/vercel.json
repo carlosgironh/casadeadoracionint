@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/ios/(.*)",
+      "destination": "/ios/index.html"
+    },
+    {
+      "source": "/ios",
+      "destination": "/ios/index.html"
+    },
+    {
       "source": "/((?!.*\\.html$).*)",
       "destination": "/index.html"
     }
