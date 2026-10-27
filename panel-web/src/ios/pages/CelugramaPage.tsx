@@ -287,11 +287,11 @@ export default function CelugramaPage() {
   if (isPendiente) {
     return (
       <div className="min-h-[calc(100dvh-64px)] p-6 flex flex-col items-center justify-center text-center max-w-sm mx-auto">
-        <div className="w-16 h-16 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mb-4">
-          <AlertCircle className="w-8 h-8" />
+        <div className="w-16 h-16 rounded-full bg-amber-50 text-[#D97706] flex items-center justify-center mb-4">
+          <AlertCircle className="w-8 h-8 text-[#D97706]" />
         </div>
-        <h3 className="text-xl font-bold text-amber-700">Cuenta Pendiente de Aprobación</h3>
-        <p className="mt-2 text-sm text-slate-500 leading-relaxed">
+        <h3 className="text-xl font-bold text-[#D97706]">Cuenta Pendiente de Aprobación</h3>
+        <p className="mt-2 text-sm text-[#757575] leading-relaxed">
           Tu líder directo debe confirmar tu registro de líder para que puedas reportar reuniones o aperturar células.
         </p>
       </div>
@@ -300,10 +300,10 @@ export default function CelugramaPage() {
 
   if (isCreatingNew || celulas.length === 0) {
     return (
-      <div className="min-h-[calc(100dvh-64px)] bg-[#F8FAFC] px-4 py-6 pb-nav">
+      <div className="min-h-[calc(100dvh-64px)] bg-[#F4F6F9] px-4 py-6 pb-28">
         <div className="max-w-md mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4">
           <h3 className="text-xl font-bold text-[#004D40]">Apertura de Célula</h3>
-          <p className="text-xs text-slate-500">Registra una nueva célula bajo tu liderazgo.</p>
+          <p className="text-xs text-[#757575]">Registra una nueva célula bajo tu liderazgo.</p>
 
           <form onSubmit={handleCrearCelula} className="space-y-4">
             <div>
@@ -375,7 +375,7 @@ export default function CelugramaPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreatingNew(false)}
-                  className="px-4 py-2 text-slate-500 font-semibold text-sm rounded-xl hover:bg-slate-50"
+                  className="px-4 py-2 text-[#757575] font-semibold text-sm rounded-xl hover:bg-slate-50"
                 >
                   Cancelar
                 </button>
@@ -395,13 +395,16 @@ export default function CelugramaPage() {
   }
 
   return (
-    <div className="min-h-[calc(100dvh-64px)] bg-[#F8FAFC] pb-nav">
-      {/* Top Cell Selector Bar matching Android */}
+    <div className="min-h-[calc(100dvh-64px)] bg-[#F4F6F9] pb-28">
+      {/* Top Cell Selector Bar matching Android CelugramaScreen:
+          OutlinedButton(colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF004D40)))
+          IconButton(modifier = Modifier.background(Color(0xFF00796B), shape = RoundedCornerShape(8.dp)))
+      */}
       <div className="max-w-md mx-auto px-4 py-3 flex items-center gap-2">
         <div className="relative flex-1">
           <button
             onClick={() => setShowCellDropdown(!showCellDropdown)}
-            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-xs text-sm font-bold text-[#004D40] flex items-center justify-between cursor-pointer"
+            className="w-full px-4 py-2.5 bg-white border border-[#004D40]/30 rounded-xl shadow-xs text-sm font-bold text-[#004D40] flex items-center justify-between cursor-pointer"
           >
             <span className="truncate">{activeCell?.zona || 'Seleccionar Célula'}</span>
             <ChevronDown className="w-4 h-4 text-[#004D40] shrink-0" />
@@ -430,11 +433,13 @@ export default function CelugramaPage() {
           className="p-2.5 bg-[#00796B] active:bg-[#004D40] text-white rounded-xl shadow-xs active:scale-95 transition-all cursor-pointer shrink-0"
           title="Nueva Célula"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-5 h-5 text-white" />
         </button>
       </div>
 
-      {/* TabRow matching Android TabRow */}
+      {/* TabRow matching Android CelugramaScreen:
+          TabRow(containerColor = Color(0xFFE0F7FA), contentColor = Color(0xFF00796B))
+      */}
       <div className="max-w-md mx-auto px-4">
         <div className="bg-[#E0F7FA] rounded-2xl p-1 flex">
           <button
@@ -442,7 +447,7 @@ export default function CelugramaPage() {
             className={`flex-1 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
               selectedTab === 'reporte'
                 ? 'bg-white text-[#00796B] shadow-xs'
-                : 'text-[#00796B]/70 hover:text-[#00796B]'
+                : 'text-[#00796B]/80 hover:text-[#00796B]'
             }`}
           >
             Reporte Semanal
@@ -452,7 +457,7 @@ export default function CelugramaPage() {
             className={`flex-1 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
               selectedTab === 'datos'
                 ? 'bg-white text-[#00796B] shadow-xs'
-                : 'text-[#00796B]/70 hover:text-[#00796B]'
+                : 'text-[#00796B]/80 hover:text-[#00796B]'
             }`}
           >
             Datos de Célula
@@ -466,8 +471,8 @@ export default function CelugramaPage() {
           <div
             className={`mb-4 p-4 rounded-2xl text-sm font-semibold flex items-center gap-2 ${
               feedbackMsg.type === 'success'
-                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                : 'bg-red-50 text-red-800 border border-red-200'
+                ? 'bg-[#E0F2F1] text-[#004D40] border border-[#00796B]'
+                : 'bg-[#FFEBEE] text-[#C62828] border border-red-200'
             }`}
           >
             <span>{feedbackMsg.text}</span>
@@ -479,7 +484,7 @@ export default function CelugramaPage() {
             {/* Outline Topic Section */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-bold text-slate-800">Usar Bosquejo Semanal</span>
+                <span className="text-sm font-bold text-[#374151]">Usar Bosquejo Semanal</span>
                 <input
                   type="checkbox"
                   checked={usoBosquejo}
@@ -490,14 +495,14 @@ export default function CelugramaPage() {
 
               {usoBosquejo ? (
                 latestBosquejo ? (
-                  <div className="bg-[#E0F7FA]/50 rounded-xl p-3 border border-[#E0F7FA] text-xs space-y-1">
+                  <div className="bg-[#E0F7FA]/60 rounded-xl p-3 border border-[#E0F7FA] text-xs space-y-1">
                     <p className="font-bold text-[#004D40] text-sm">{latestBosquejo.titulo}</p>
                     {latestBosquejo.versiculo_base && (
-                      <p className="text-slate-600">Base: {latestBosquejo.versiculo_base}</p>
+                      <p className="text-[#374151]">Base: {latestBosquejo.versiculo_base}</p>
                     )}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 italic">No hay bosquejo cargado para esta semana.</p>
+                  <p className="text-xs text-[#757575] italic">No hay bosquejo cargado para esta semana.</p>
                 )
               ) : (
                 <div className="space-y-2 pt-2">
@@ -522,14 +527,14 @@ export default function CelugramaPage() {
             {/* Attendance Checklist Section */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 space-y-3">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                <h4 className="font-bold text-slate-800 text-sm">Asistencia de la Célula</h4>
+                <h4 className="font-bold text-[#374151] text-sm">Asistencia de la Célula</h4>
                 <span className="bg-[#E0F2F1] text-[#00796B] text-xs font-extrabold px-3 py-1 rounded-full">
                   Total: {totalAsistentes}
                 </span>
               </div>
 
               {discipulos.length === 0 ? (
-                <p className="text-xs text-slate-400 italic py-2">
+                <p className="text-xs text-[#757575] italic py-2">
                   No hay asistentes registrados en tu red para marcar asistencia.
                 </p>
               ) : (
@@ -556,9 +561,9 @@ export default function CelugramaPage() {
 
             {/* Ofrenda Field */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 space-y-2">
-              <label className="text-sm font-bold text-slate-800">Ofrenda Recolectada ($)</label>
+              <label className="text-sm font-bold text-[#374151]">Ofrenda Recolectada ($)</label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <DollarSign className="absolute left-3 top-3 w-5 h-5 text-[#757575]" />
                 <input
                   type="number"
                   step="0.01"
@@ -571,20 +576,20 @@ export default function CelugramaPage() {
               </div>
             </div>
 
-            {/* Submit Button (CaiPrimaryButton gradient) */}
+            {/* Submit Button (gradient: listOf(Color(0xFF00796B), Color(0xFF004D40))) */}
             <button
               onClick={handleEnviarCelugrama}
               disabled={sending}
               className="w-full h-14 bg-cai-primary-btn active:opacity-90 text-white rounded-2xl font-extrabold text-base shadow-lg shadow-teal-900/10 flex items-center justify-center gap-2 active:scale-98 transition-all disabled:opacity-50 cursor-pointer"
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-5 h-5 text-white" />
               <span>{sending ? 'ENVIANDO INFORME...' : 'ENVIAR INFORME'}</span>
             </button>
           </div>
         ) : (
           /* Datos de Célula Tab */
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4">
-            <h4 className="font-bold text-slate-800 text-base">Configuración de la Célula</h4>
+            <h4 className="font-bold text-[#374151] text-base">Configuración de la Célula</h4>
 
             <div>
               <label className="text-xs font-semibold text-slate-600">Dirección de la Célula</label>
@@ -628,7 +633,7 @@ export default function CelugramaPage() {
               disabled={savingDatos}
               className="w-full mt-2 h-12 bg-cai-primary-btn text-white rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer"
             >
-              <Save className="w-4 h-4" />
+              <Save className="w-4 h-4 text-white" />
               <span>{savingDatos ? 'Guardando...' : 'Guardar Cambios'}</span>
             </button>
           </div>

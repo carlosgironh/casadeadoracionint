@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { ArrowLeft, Loader2, Eye, EyeOff } from 'lucide-react';
 
@@ -205,33 +205,32 @@ export default function RegistroPage({ onBackClick, onSwitchToLogin }: RegistroP
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between text-slate-800">
-      {/* Top Bar with Back Arrow */}
-      <div className="sticky top-0 z-10 bg-white border-b border-slate-200/80 pt-safe px-4 shadow-xs">
+    <div className="min-h-screen bg-[#F4F7FC] flex flex-col justify-between text-slate-800">
+      {/* Top Bar matching Android RegistroScreen: containerColor = Color(0xFFF4F7FC), tint = Color(0xFF0D509E) */}
+      <div className="sticky top-0 z-10 bg-[#F4F7FC] pt-safe px-4">
         <div className="h-16 flex items-center gap-3">
           <button
             onClick={onBackClick}
-            className="p-2 -ml-2 rounded-full hover:bg-slate-100 active:scale-95 transition-all text-slate-700 cursor-pointer"
+            className="p-2 -ml-2 rounded-full hover:bg-slate-200/50 active:scale-95 transition-all text-[#0D509E] cursor-pointer"
           >
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <span className="font-bold text-slate-800 text-lg">Registro de Líder</span>
         </div>
       </div>
 
       {/* Main Content matching Android RegistroScreen */}
-      <div className="flex-1 max-w-md mx-auto w-full p-4 sm:p-6 space-y-4 pb-12">
-        <div className="text-center sm:text-left">
+      <div className="flex-1 max-w-md mx-auto w-full px-6 py-2 space-y-4 pb-16">
+        <div>
           <h2 className="text-2xl sm:text-3xl font-bold text-[#0D509E] tracking-tight">
             Darse de Alta como Líder
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-[#757575]">
             Regístrate seleccionando tu Red y Líder Directo.
           </p>
         </div>
 
         {errorMsg && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
+          <div className="p-4 bg-[#FFEBEE] border border-red-200 rounded-2xl text-[#C62828] text-sm font-medium">
             {errorMsg}
           </div>
         )}
@@ -242,77 +241,76 @@ export default function RegistroPage({ onBackClick, onSwitchToLogin }: RegistroP
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-3.5 bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
-            <label className="text-xs font-semibold text-slate-600">Nombre *</label>
+            <label className="text-xs font-semibold text-slate-700">Nombre *</label>
             <input
               type="text"
               required
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600">Apellido *</label>
+            <label className="text-xs font-semibold text-slate-700">Apellido *</label>
             <input
               type="text"
               required
               value={apellido}
               onChange={(e) => setApellido(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600">Nombre de Usuario *</label>
+            <label className="text-xs font-semibold text-slate-700">Nombre de Usuario (ej. juanperez123) *</label>
             <input
               type="text"
               required
-              placeholder="ej. juanperez123"
               value={username}
               onChange={(e) => setUsername(e.target.value.replace(/\s+/g, ''))}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600">Documento / Cédula *</label>
+            <label className="text-xs font-semibold text-slate-700">Documento / Cédula *</label>
             <input
               type="text"
               required
               value={cedula}
               onChange={(e) => setCedula(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600">Correo Electrónico *</label>
+            <label className="text-xs font-semibold text-slate-700">Correo Electrónico *</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600">Contraseña *</label>
+            <label className="text-xs font-semibold text-slate-700">Contraseña *</label>
             <div className="relative mt-1">
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value.replace(/\s+/g, ''))}
-                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E] pr-10"
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E] pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -320,34 +318,34 @@ export default function RegistroPage({ onBackClick, onSwitchToLogin }: RegistroP
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600">WhatsApp / Teléfono</label>
+            <label className="text-xs font-semibold text-slate-700">WhatsApp / Teléfono</label>
             <input
               type="tel"
               placeholder="+507 6000-0000"
               value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600">Dirección</label>
+            <label className="text-xs font-semibold text-slate-700">Dirección</label>
             <input
               type="text"
               placeholder="Ciudad, barriada, calle"
               value={direccion}
               onChange={(e) => setDireccion(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
           {/* Red Selector */}
           <div>
-            <label className="text-xs font-semibold text-slate-600">Selecciona tu Red *</label>
+            <label className="text-xs font-semibold text-slate-700">Selecciona tu Red *</label>
             <select
               value={selectedRedId}
               onChange={(e) => setSelectedRedId(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             >
               {redes.map((r) => (
                 <option key={r.id} value={r.id}>
@@ -359,11 +357,11 @@ export default function RegistroPage({ onBackClick, onSwitchToLogin }: RegistroP
 
           {/* Equipo / Líder Directo Selector */}
           <div>
-            <label className="text-xs font-semibold text-slate-600">Líder Directo / Equipo *</label>
+            <label className="text-xs font-semibold text-slate-700">Líder Directo / Equipo *</label>
             <select
               value={selectedEquipoId}
               onChange={(e) => setSelectedEquipoId(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             >
               {equipos.length === 0 ? (
                 <option value="">No hay equipos disponibles en esta red</option>
@@ -378,7 +376,7 @@ export default function RegistroPage({ onBackClick, onSwitchToLogin }: RegistroP
           </div>
 
           {/* Plan Felipe Checkbox */}
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-2 pt-2">
             <input
               type="checkbox"
               id="planFelipe"
@@ -392,7 +390,7 @@ export default function RegistroPage({ onBackClick, onSwitchToLogin }: RegistroP
           </div>
 
           {/* Capacitación */}
-          <div className="flex items-center justify-between pt-1">
+          <div className="flex items-center justify-between pt-2">
             <span className="text-xs font-semibold text-slate-700">¿Ha recibido capacitación?</span>
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-1.5 text-xs font-semibold cursor-pointer">
@@ -422,39 +420,39 @@ export default function RegistroPage({ onBackClick, onSwitchToLogin }: RegistroP
 
           {/* Ministerio */}
           <div>
-            <label className="text-xs font-semibold text-slate-600">Ministerio o Servicio</label>
+            <label className="text-xs font-semibold text-slate-700">Ministerio o Servicio</label>
             <input
               type="text"
               placeholder="Ej. Alabanza, Ujieres, Medios (o Ninguno)"
               value={ministerio}
               onChange={(e) => setMinisterio(e.target.value)}
-              className="w-full mt-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
+              className="w-full mt-1 px-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-[#0D509E]"
             />
           </div>
 
-          {/* Submit Button (CaiPrimaryButton gradient) */}
+          {/* Submit Button (CaiPrimaryButton gradient: listOf(Color(0xFF00796B), Color(0xFF004D40))) */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-14 mt-4 bg-cai-primary-btn text-white rounded-2xl font-bold text-base shadow-lg shadow-teal-900/10 flex items-center justify-center gap-2 active:scale-98 transition-all cursor-pointer"
+            className="w-full h-14 mt-6 bg-cai-primary-btn text-white rounded-2xl font-bold text-base shadow-lg shadow-teal-900/10 flex items-center justify-center gap-2 active:scale-98 transition-all cursor-pointer"
           >
             {loading ? (
               <Loader2 className="w-5 h-5 animate-spin text-white" />
             ) : (
-              'Completar Registro'
+              'Validar y Registrar'
             )}
           </button>
         </form>
 
-        <div className="text-center pt-2">
-          <button
-            onClick={onSwitchToLogin}
-            className="text-sm font-semibold text-[#0D509E] hover:underline"
-          >
-            ¿Ya tienes una cuenta? Iniciar Sesión.
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onSwitchToLogin}
+          className="w-full h-12 mt-3 border-2 border-[#0D509E] text-[#0D509E] active:bg-[#0D509E]/10 rounded-2xl font-bold text-sm flex items-center justify-center active:scale-98 transition-all cursor-pointer"
+        >
+          Volver al Login
+        </button>
       </div>
     </div>
   );
 }
+

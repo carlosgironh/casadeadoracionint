@@ -88,34 +88,34 @@ export default function PerfilPage({ onBack }: PerfilPageProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-[#F9FAFB] flex flex-col overflow-y-auto animate-in slide-in-from-right duration-200">
-      {/* TopAppBar matching Android Scaffold */}
+      {/* TopAppBar matching Android Scaffold: containerColor = Color.White, back arrow = Color(0xFF004D40) */}
       <div className="sticky top-0 z-10 bg-white border-b border-slate-200/80 pt-safe shadow-xs">
         <div className="h-16 px-4 flex items-center gap-3">
           <button
             onClick={onBack}
-            className="p-2 -ml-2 rounded-full hover:bg-slate-100 active:scale-95 transition-all text-slate-700 cursor-pointer"
+            className="p-2 -ml-2 rounded-full hover:bg-slate-100 active:scale-95 transition-all text-[#004D40] cursor-pointer"
           >
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-6 h-6 text-[#004D40]" />
           </button>
           <h2 className="text-xl font-bold text-slate-800">Mi Perfil</h2>
         </div>
       </div>
 
-      <div className="flex-1 max-w-md mx-auto w-full p-4 space-y-6 pb-12">
+      <div className="flex-1 max-w-md mx-auto w-full p-4 space-y-6 pb-16">
         <div>
           <h3 className="text-3xl font-extrabold text-[#004D40] tracking-tight">Mi Perfil</h3>
-          <p className="text-sm text-slate-500 mt-0.5">Visualiza y edita tus datos</p>
+          <p className="text-sm text-[#6B7280] mt-0.5">Visualiza y edita tus datos</p>
         </div>
 
         {feedback && (
           <div
             className={`p-4 rounded-2xl text-sm font-semibold flex items-center gap-2 ${
               feedback.type === 'success'
-                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                : 'bg-red-50 text-red-800 border border-red-200'
+                ? 'bg-[#E0F2F1] text-[#004D40] border border-[#00796B]'
+                : 'bg-[#FFEBEE] text-[#C62828] border border-red-200'
             }`}
           >
-            {feedback.type === 'success' && <CheckCircle2 className="w-4 h-4 shrink-0" />}
+            {feedback.type === 'success' && <CheckCircle2 className="w-4 h-4 shrink-0 text-[#004D40]" />}
             <span>{feedback.text}</span>
           </div>
         )}
@@ -128,7 +128,7 @@ export default function PerfilPage({ onBack }: PerfilPageProps) {
         ) : (
           <form onSubmit={handleSave} className="space-y-4">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 space-y-4">
-              <h4 className="font-bold text-slate-800 text-base">Datos Personales</h4>
+              <h4 className="font-bold text-[#374151] text-base">Datos Personales</h4>
 
               <div>
                 <label className="text-xs font-semibold text-slate-600">Nombre Completo</label>
@@ -195,6 +195,7 @@ export default function PerfilPage({ onBack }: PerfilPageProps) {
               </div>
             </div>
 
+            {/* Save Button (gradient: listOf(Color(0xFF00796B), Color(0xFF004D40))) */}
             <button
               type="submit"
               disabled={saving}
@@ -204,12 +205,13 @@ export default function PerfilPage({ onBack }: PerfilPageProps) {
               <span>{saving ? 'Guardando...' : 'Guardar Cambios'}</span>
             </button>
 
+            {/* Logout Button (gradient: listOf(Color(0xFFDC2626), Color(0xFF991B1B)) matching Android PerfilScreen line 249) */}
             <button
               type="button"
               onClick={signOut}
-              className="w-full h-12 bg-white border border-red-200 text-red-600 rounded-xl font-bold text-sm shadow-xs flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer mt-3"
+              className="w-full h-12 bg-gradient-to-r from-[#DC2626] to-[#991B1B] text-white rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer mt-3"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-4 h-4 text-white" />
               <span>Cerrar Sesión</span>
             </button>
           </form>

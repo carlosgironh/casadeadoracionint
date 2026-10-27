@@ -141,31 +141,34 @@ export default function DiscipulosPage() {
   }
 
   return (
-    <div className="min-h-[calc(100dvh-64px)] bg-[#F8FAFC] px-4 py-6 pb-nav">
+    <div className="min-h-[calc(100dvh-64px)] bg-[#F4F6F9] px-4 py-6 pb-28">
       <div className="max-w-md mx-auto space-y-6">
-        {/* Title and Add Disciple Button */}
+        {/* Title matching MisDiscipulosScreen.kt:
+            Text("Mis Discípulos", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF004D40))
+            CaiIconButton(icon = Icons.Filled.Add, containerColor = Color(0xFF0D509E))
+        */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-extrabold text-[#004D40] tracking-tight">Discípulos</h2>
-            <p className="text-sm text-slate-500">Gestión de tu red y células</p>
+            <h2 className="text-3xl font-extrabold text-[#004D40] tracking-tight">Mis Discípulos</h2>
+            <p className="text-sm text-[#757575]">Gestión de tu red y células</p>
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-[#00796B] active:bg-[#004D40] text-white p-2.5 rounded-full shadow-md active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+            className="bg-[#0D509E] active:bg-[#0A3D78] text-white p-2.5 rounded-full shadow-md active:scale-95 transition-all flex items-center justify-center cursor-pointer"
             title="Vincular Discípulo"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-5 h-5 text-white" />
           </button>
         </div>
 
         {loading ? (
           <div className="py-16 flex flex-col items-center justify-center text-center">
-            <div className="w-8 h-8 border-3 border-[#00796B] border-t-transparent rounded-full animate-spin" />
-            <p className="mt-3 text-sm text-[#00796B]">Cargando red...</p>
+            <div className="w-8 h-8 border-3 border-[#007F7F] border-t-transparent rounded-full animate-spin" />
+            <p className="mt-3 text-sm text-[#007F7F]">Cargando red...</p>
           </div>
         ) : (
           <>
-            {/* Section: Mis Líderes en Formación */}
+            {/* Section: Mis Líderes en Formación matching color Color(0xFF007F7F) */}
             <div className="space-y-3">
               <button
                 onClick={() => setExpandLideres(!expandLideres)}
@@ -182,26 +185,26 @@ export default function DiscipulosPage() {
               {expandLideres && (
                 <div className="space-y-3">
                   {lideresFormacion.length === 0 ? (
-                    <p className="text-slate-400 italic text-sm py-2">
+                    <p className="text-[#757575] italic text-sm py-2">
                       No tienes líderes en formación registrados.
                     </p>
                   ) : (
                     lideresFormacion.map((lider) => (
                       <div
                         key={lider.id}
-                        className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex items-center justify-between gap-3"
+                        className="bg-[#F3F4F6] rounded-2xl shadow-xs border border-slate-200/60 p-4 flex items-center justify-between gap-3"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-11 h-11 rounded-full bg-blue-50 text-[#0D509E] flex items-center justify-center shrink-0">
-                            <User className="w-6 h-6" />
+                          <div className="w-11 h-11 rounded-full bg-white text-[#0D509E] flex items-center justify-center shrink-0 shadow-xs">
+                            <User className="w-6 h-6 text-[#0D509E]" />
                           </div>
                           <div className="min-w-0">
-                            <h4 className="font-bold text-slate-800 text-base truncate">
+                            <h4 className="font-bold text-[#1F2937] text-base truncate">
                               {lider.nombre_completo}
                             </h4>
-                            <p className="text-xs text-slate-500">Nivel: {lider.nivel || 1}</p>
+                            <p className="text-xs text-[#757575]">Nivel: {lider.nivel || 1}</p>
                             {lider.pendiente_aprobacion && (
-                              <span className="inline-block mt-1 text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                              <span className="inline-block mt-1 text-[11px] font-bold text-[#D97706] bg-amber-50 px-2 py-0.5 rounded-full">
                                 Pendiente de Aprobación
                               </span>
                             )}
@@ -232,7 +235,7 @@ export default function DiscipulosPage() {
               >
                 <div className="flex items-center gap-2">
                   <span className="text-xl font-bold text-[#007F7F]">Mis Discípulos</span>
-                  <span className="bg-[#E0F2F1] text-[#00796B] text-xs font-extrabold px-2 py-0.5 rounded-full">
+                  <span className="bg-[#E0F2F1] text-[#00796B] text-xs font-extrabold px-2.5 py-0.5 rounded-full">
                     {discipulos.length}
                   </span>
                 </div>
@@ -246,7 +249,7 @@ export default function DiscipulosPage() {
               {expandDiscipulos && (
                 <div className="space-y-3">
                   {discipulos.length === 0 ? (
-                    <p className="text-slate-400 italic text-sm py-2">
+                    <p className="text-[#757575] italic text-sm py-2">
                       No tienes discípulos asignados aún.
                     </p>
                   ) : (
@@ -290,7 +293,7 @@ export default function DiscipulosPage() {
                             )}
                           </div>
 
-                          {/* Progress badges */}
+                          {/* Progress badges matching color Color(0xFF00796B) and Color(0xFFE0F2F1) */}
                           {badges.length > 0 && (
                             <div className="flex flex-wrap gap-1.5 pt-1 border-t border-slate-50">
                               {badges.map((b) => (

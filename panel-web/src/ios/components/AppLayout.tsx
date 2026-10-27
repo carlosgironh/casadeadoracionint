@@ -65,24 +65,34 @@ export default function AppLayout({ onLoginClick }: AppLayoutProps) {
   }, [isLoggedIn, activeTab]);
 
   return (
-    <div className="min-h-[100dvh] bg-[#F8FAFC] flex flex-col relative overflow-x-hidden">
-      {/* Top App Bar matching Android */}
-      <AppTopBar
-        isLoggedIn={isLoggedIn}
-        userName={profile?.nombre_completo || ''}
-        unreadNotificationsCount={unreadNotis}
-        onLoginClick={onLoginClick}
-        onOpenNotifications={() => setShowNotificaciones(true)}
-        onOpenPerfil={() => setShowPerfil(true)}
-        onOpenHistorial={() => setShowHistorial(true)}
-        onOpenAcercaDe={() => setShowAcercaDe(true)}
-        onLogout={signOut}
-      />
+    <div className="min-h-[100dvh] bg-[#F4F6F9] flex flex-col relative overflow-x-hidden">
+      {/* Top App Bar rendered ONLY when logged in, matching Android Navigation.kt */}
+      {isLoggedIn && (
+        <AppTopBar
+          userName={profile?.nombre_completo || profile?.nombre || ''}
+          unreadNotificationsCount={unreadNotis}
+          onOpenNotifications={() => setShowNotificaciones(true)}
+          onOpenPerfil={() => setShowPerfil(true)}
+          onOpenHistorial={() => setShowHistorial(true)}
+          onOpenAcercaDe={() => setShowAcercaDe(true)}
+          onLogout={signOut}
+        />
+      )}
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto">
-        {activeTab === 'radio' && <RadioPage />}
-        {activeTab === 'anuncios' && <AnunciosPage />}
+        {activeTab === 'radio' && (
+          <RadioPage
+            isLoggedIn={isLoggedIn}
+            onLoginClick={onLoginClick}
+          />
+        )}
+        {activeTab === 'anuncios' && (
+          <AnunciosPage
+            isLoggedIn={isLoggedIn}
+            onLoginClick={onLoginClick}
+          />
+        )}
         {activeTab === 'discipulos' && isLoggedIn && <DiscipulosPage />}
         {activeTab === 'bosquejos' && isLoggedIn && <BosquejosPage />}
         {activeTab === 'celugrama' && isLoggedIn && <CelugramaPage />}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Calendar, X } from 'lucide-react';
+import { Calendar, X, User } from 'lucide-react';
 
 interface Anuncio {
   id: string;
@@ -10,7 +10,12 @@ interface Anuncio {
   imagen_url?: string;
 }
 
-export default function AnunciosPage() {
+interface AnunciosPageProps {
+  isLoggedIn?: boolean;
+  onLoginClick?: () => void;
+}
+
+export default function AnunciosPage({ isLoggedIn = false, onLoginClick }: AnunciosPageProps) {
   const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -37,9 +42,25 @@ export default function AnunciosPage() {
   }, []);
 
   return (
-    <div className="min-h-[calc(100dvh-64px)] bg-cai-cyan-gradient px-4 py-6 pb-nav">
-      <div className="max-w-md mx-auto">
-        {/* Header matching Android AnunciosScreen */}
+    <div className="min-h-[100dvh] bg-cai-cyan-gradient px-4 pb-28 overflow-y-auto">
+      {/* Top transparent header if not logged in */}
+      {!isLoggedIn && onLoginClick && (
+        <div className="pt-safe h-16 flex items-center justify-end shrink-0">
+          <button
+            onClick={onLoginClick}
+            className="bg-[#0D47A1] active:bg-[#0A387E] text-white px-4 py-2 rounded-full text-sm font-bold shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <User className="w-4 h-4 text-white" />
+            <span>Ingresar Líder</span>
+          </button>
+        </div>
+      )}
+
+      <div className={`max-w-md mx-auto ${isLoggedIn ? 'pt-6' : 'pt-2'}`}>
+        {/* Header matching Android AnunciosScreen:
+            Text("Anuncios", fontSize = 32.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF004D40))
+            Text("Comunicados y eventos de la iglesia", fontSize = 16.sp, color = Color(0xFF007F7F))
+        */}
         <div className="mb-6">
           <h2 className="text-3xl font-extrabold text-[#004D40] tracking-tight">Anuncios</h2>
           <p className="text-base text-[#007F7F] mt-0.5">Comunicados y eventos de la iglesia</p>
@@ -52,7 +73,7 @@ export default function AnunciosPage() {
             <p className="mt-3 text-sm text-[#007F7F]">Cargando anuncios...</p>
           </div>
         ) : anuncios.length === 0 ? (
-          <div className="py-16 text-center text-gray-500 text-sm">
+          <div className="py-16 text-center text-[#757575] text-sm">
             No hay anuncios por el momento.
           </div>
         ) : (
@@ -60,7 +81,7 @@ export default function AnunciosPage() {
             {anuncios.map((anuncio) => (
               <div
                 key={anuncio.id}
-                className="bg-white rounded-2xl shadow-sm border border-slate-100/80 overflow-hidden"
+                className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
               >
                 {anuncio.imagen_url && (
                   <div

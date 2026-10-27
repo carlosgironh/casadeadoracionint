@@ -42,6 +42,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Support mock authentication for UI preview / test demo
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mockAuth') === '1') {
+      const mockUser = { id: '313fcbc5-a1b4-41e6-a3ac-4f7ece2ba01f', email: 'cgiron@casadeadoracionint.com' } as any;
+      const mockProfile: UsuarioProfile = {
+        id: '313fcbc5-a1b4-41e6-a3ac-4f7ece2ba01f',
+        nombre_completo: 'Carlos Giron',
+        username: 'cgiron',
+        email: 'cgiron@casadeadoracionint.com',
+        nivel: 7,
+        pendiente_aprobacion: false
+      };
+      setUser(mockUser);
+      setProfile(mockProfile);
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
