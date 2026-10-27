@@ -35,7 +35,7 @@ export default function HistorialCelugramasPage({ onBack }: HistorialCelugramasP
   }, [user]);
 
   return (
-    <div className="py-4 px-5 pb-24 max-w-lg mx-auto select-none">
+    <div className="py-4 px-5 pb-36 max-w-lg mx-auto select-none">
       {/* Barra superior con volver */}
       <div className="flex items-center gap-3 mb-6">
         <button 
@@ -102,4 +102,5 @@ export default function HistorialCelugramasPage({ onBack }: HistorialCelugramasP
     </div>
   );
 }
+
 

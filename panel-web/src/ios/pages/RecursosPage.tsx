@@ -31,7 +31,7 @@ export default function RecursosPage() {
   }, []);
 
   return (
-    <div className="py-4 px-5 pb-24 max-w-lg mx-auto select-none">
+    <div className="py-4 px-5 pb-36 max-w-lg mx-auto select-none">
       {/* Header */}
       <div className="mb-5">
         <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
@@ -173,4 +173,5 @@ export default function RecursosPage() {
     </div>
   );
 }
+
 

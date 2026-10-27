@@ -6,7 +6,7 @@ export default function PerfilPage() {
   const { user, profile, logout } = useAuth();
 
   return (
-    <div className="py-4 px-5 pb-24 max-w-lg mx-auto select-none">
+    <div className="py-4 px-5 pb-36 max-w-lg mx-auto select-none">
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight text-white">Mi Perfil</h1>
         <p className="text-xs text-slate-400">Información de cuenta y configuración</p>
@@ -57,4 +57,5 @@ export default function PerfilPage() {
     </div>
   );
 }
+
 

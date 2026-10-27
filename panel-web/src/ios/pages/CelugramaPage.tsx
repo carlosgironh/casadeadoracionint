@@ -101,7 +101,7 @@ export default function CelugramaPage({ onViewHistory }: CelugramaPageProps) {
   }
 
   return (
-    <div className="py-4 px-5 pb-24 max-w-lg mx-auto select-none">
+    <div className="py-4 px-5 pb-36 max-w-lg mx-auto select-none">
       {/* Encabezado */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -305,4 +305,5 @@ export default function CelugramaPage({ onViewHistory }: CelugramaPageProps) {
     </div>
   );
 }
+
 
