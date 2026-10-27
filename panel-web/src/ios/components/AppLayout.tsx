@@ -13,8 +13,8 @@ export default function AppLayout() {
   const [celugramaView, setCelugramaView] = useState<'form' | 'historial'>('form');
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white flex flex-col justify-between pt-safe">
-      <main className="flex-1 pb-24 overflow-y-auto">
+    <div className="h-[100dvh] bg-[#0B0F19] text-white flex flex-col pt-safe overflow-hidden relative">
+      <main className="flex-1 pb-36 overflow-y-auto overscroll-contain">
         {activeTab === 'radio' && <RadioPage />}
         {activeTab === 'celugrama' && (
           celugramaView === 'form' 
@@ -36,4 +36,3 @@ export default function AppLayout() {
     </div>
   );
 }
-

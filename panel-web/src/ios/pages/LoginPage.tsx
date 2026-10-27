@@ -36,49 +36,49 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white flex flex-col justify-between p-6 select-none relative overflow-hidden">
+    <div className="min-h-[100dvh] bg-[#0B0F19] text-white flex flex-col justify-between p-6 pb-12 select-none relative overflow-y-auto">
       {/* Luces sutiles de fondo */}
       <div className="absolute -top-32 -left-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <div className="pt-10 flex flex-col items-center text-center z-10">
-        <div className="relative mb-4">
-          <div className="w-20 h-20 rounded-2xl p-1 bg-gradient-to-tr from-amber-400/40 via-amber-200/10 to-transparent shadow-xl">
+      <div className="pt-6 flex flex-col items-center text-center z-10 shrink-0">
+        <div className="relative mb-3">
+          <div className="w-16 h-16 rounded-2xl p-1 bg-gradient-to-tr from-amber-400/40 via-amber-200/10 to-transparent shadow-xl">
             <img 
               src="/ios/icons/icon-512.png" 
               alt="Casa de Adoración" 
-              className="w-full h-full object-cover rounded-[18px]" 
+              className="w-full h-full object-cover rounded-[14px]" 
             />
           </div>
           <span className="absolute -bottom-1 -right-2 bg-gradient-to-r from-amber-400 to-amber-600 text-black text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider shadow">
             Líderes
           </span>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">
+        <h1 className="text-xl font-bold tracking-tight text-white">
           Bienvenido
         </h1>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-slate-400 mt-0.5">
           Ingresa con tus credenciales de líder
         </p>
       </div>
 
       {/* Formulario */}
-      <div className="my-auto py-6 z-10 max-w-sm mx-auto w-full">
+      <div className="my-auto py-4 z-10 max-w-sm mx-auto w-full shrink-0">
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+          <div className="mb-3 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           {/* Email */}
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider pl-1">
               Correo Electrónico
             </label>
-            <div className="glass-ios rounded-2xl px-4 py-3 flex items-center gap-3 border border-white/10 focus-within:border-amber-400/50 transition-all">
+            <div className="glass-ios rounded-2xl px-4 py-2.5 flex items-center gap-3 border border-white/10 focus-within:border-amber-400/50 transition-all">
               <Mail className="w-4 h-4 text-slate-400" />
               <input 
                 type="email" 
@@ -97,7 +97,7 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
             <label className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider pl-1">
               Contraseña
             </label>
-            <div className="glass-ios rounded-2xl px-4 py-3 flex items-center gap-3 border border-white/10 focus-within:border-amber-400/50 transition-all">
+            <div className="glass-ios rounded-2xl px-4 py-2.5 flex items-center gap-3 border border-white/10 focus-within:border-amber-400/50 transition-all">
               <Lock className="w-4 h-4 text-slate-400" />
               <input 
                 type={showPassword ? 'text' : 'password'} 
@@ -120,7 +120,7 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 py-3.5 px-4 rounded-2xl gold-gradient text-black font-bold text-sm shadow-lg shadow-amber-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full mt-2 py-3 px-4 rounded-2xl gold-gradient text-black font-bold text-sm shadow-lg shadow-amber-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
@@ -135,7 +135,7 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
       </div>
 
       {/* Footer / Switch a Registro */}
-      <div className="pb-8 text-center z-10">
+      <div className="pt-2 pb-6 text-center z-10 shrink-0">
         <p className="text-xs text-slate-400">
           ¿No tienes una cuenta de líder?{' '}
           <button 
@@ -150,4 +150,3 @@ export default function LoginPage({ onSwitchToRegister }: LoginPageProps) {
     </div>
   );
 }
-
