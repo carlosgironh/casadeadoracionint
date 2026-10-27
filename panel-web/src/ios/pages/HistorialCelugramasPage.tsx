@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, Calendar, Users, DollarSign, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { ArrowLeft, Calendar, Users, CheckCircle2 } from 'lucide-react';
+
+interface InformeSimple {
+  id: string;
+  nombre_celula: string;
+  fecha_reunion: string;
+  asistencia_total: number;
+  estado: string;
+}
 
 interface HistorialCelugramasPageProps {
   onBack: () => void;
@@ -9,98 +17,96 @@ interface HistorialCelugramasPageProps {
 
 export default function HistorialCelugramasPage({ onBack }: HistorialCelugramasPageProps) {
   const { user } = useAuth();
-  const [reportes, setReportes] = useState<any[]>([]);
+  const [informes, setInformes] = useState<InformeSimple[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadHistorial() {
+    async function fetchInformes() {
       if (!user) return;
       try {
+        const { data: usuarioDB } = await supabase
+          .from('usuarios')
+          .select('id, conyuge_id')
+          .eq('id', user.id)
+          .single();
+
+        const leaderIds = [user.id];
+        if (usuarioDB?.conyuge_id) {
+          leaderIds.push(usuarioDB.conyuge_id);
+        }
+
         const { data, error } = await supabase
           .from('informes_celula')
-          .select('*')
-          .eq('lider_id', user.id)
-          .order('created_at', { ascending: false });
+          .select('id, nombre_celula, fecha_reunion, asistencia_total, estado')
+          .in('lider_id', leaderIds)
+          .order('fecha_reunion', { ascending: false });
 
         if (!error && data) {
-          setReportes(data);
+          setInformes(data);
         }
       } catch (err) {
-        console.error('Error cargando historial:', err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     }
-    loadHistorial();
+
+    fetchInformes();
   }, [user]);
 
   return (
-    <div className="py-4 px-5 pb-36 max-w-lg mx-auto select-none">
-      {/* Barra superior con volver */}
-      <div className="flex items-center gap-3 mb-6">
-        <button 
-          onClick={onBack}
-          className="p-2 rounded-xl glass-ios text-slate-300 hover:text-white"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <div>
-          <h1 className="text-xl font-bold text-white">Historial de Reportes</h1>
-          <p className="text-xs text-slate-400">Celugramas enviados por tu célula</p>
+    <div className="fixed inset-0 z-50 bg-[#F9FAFB] flex flex-col overflow-y-auto animate-in slide-in-from-right duration-200">
+      {/* TopAppBar matching Android HistorialCelugramasScreen */}
+      <div className="sticky top-0 z-10 bg-[#004D40] text-white pt-safe shadow-md">
+        <div className="h-16 px-4 flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="p-2 -ml-2 rounded-full hover:bg-white/10 active:scale-95 transition-all text-white cursor-pointer"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <h2 className="text-xl font-bold">Historial de Celugramas</h2>
         </div>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : reportes.length === 0 ? (
-        <div className="glass-ios rounded-3xl p-8 text-center text-slate-400 my-8">
-          <Calendar className="w-12 h-12 mx-auto text-slate-500 mb-3" />
-          <p className="text-sm font-medium">Aún no has enviado ningún reporte de celugrama.</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {reportes.map((rep) => (
-            <div key={rep.id} className="glass-ios rounded-2xl p-4 border border-white/10 space-y-3">
+      <div className="flex-1 max-w-md mx-auto w-full p-4 space-y-3 pb-12">
+        {loading ? (
+          <div className="py-20 flex flex-col items-center justify-center text-center">
+            <div className="w-8 h-8 border-3 border-[#004D40] border-t-transparent rounded-full animate-spin" />
+            <p className="mt-3 text-sm text-[#004D40]">Cargando historial...</p>
+          </div>
+        ) : informes.length === 0 ? (
+          <div className="py-20 text-center text-slate-500 text-sm">
+            No tienes celugramas registrados previamente.
+          </div>
+        ) : (
+          informes.map((inf) => (
+            <div
+              key={inf.id}
+              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 space-y-2.5"
+            >
               <div className="flex items-center justify-between">
-                <span className="font-bold text-white text-base">{rep.nombre_celula || 'Célula'}</span>
-                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                  rep.estado === 'aprobado' ? 'bg-emerald-500/20 text-emerald-400' :
-                  rep.estado === 'rechazado' ? 'bg-red-500/20 text-red-400' :
-                  'bg-amber-500/20 text-amber-400'
-                }`}>
-                  {rep.estado === 'aprobado' ? <CheckCircle2 className="w-3 h-3" /> :
-                   rep.estado === 'rechazado' ? <XCircle className="w-3 h-3" /> :
-                   <Clock className="w-3 h-3" />}
-                  {rep.estado || 'Pendiente'}
+                <h4 className="font-bold text-slate-800 text-base">{inf.nombre_celula}</h4>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3 h-3" />
+                  {inf.estado || 'Enviado'}
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5 text-xs">
-                <div>
-                  <span className="text-slate-400 block text-[10px]">Fecha</span>
-                  <span className="font-semibold text-slate-200">{rep.fecha_reunion || 'N/A'}</span>
+              <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                  <span>{new Date(inf.fecha_reunion).toLocaleDateString('es-PA', { dateStyle: 'medium' })}</span>
                 </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px]">Asistencia</span>
-                  <span className="font-semibold text-slate-200 flex items-center gap-1">
-                    <Users className="w-3 h-3 text-amber-400" /> {rep.asistencia_total}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px]">Ofrenda</span>
-                  <span className="font-semibold text-emerald-400 flex items-center gap-0.5">
-                    <DollarSign className="w-3 h-3" /> {rep.ofrenda || 0}
-                  </span>
+                <div className="flex items-center gap-1 font-semibold text-[#00796B]">
+                  <Users className="w-3.5 h-3.5" />
+                  <span>Asistentes: {inf.asistencia_total ?? 0}</span>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
 }
-
-

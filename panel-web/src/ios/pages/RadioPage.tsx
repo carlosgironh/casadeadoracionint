@@ -1,88 +1,76 @@
+import { Play, Pause, Loader2 } from 'lucide-react';
 import { useRadio } from '../contexts/RadioContext';
-import { Play, Pause, Radio as RadioIcon, Volume2, Sparkles } from 'lucide-react';
 
 export default function RadioPage() {
-  const { isPlaying, isBuffering, togglePlay, volume, setVolume } = useRadio();
+  const { isPlaying, isBuffering, togglePlay } = useRadio();
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-[calc(100dvh-120px)] py-4 px-6 text-center select-none overflow-y-auto">
-      {/* Badge Superior */}
-      <div className="pt-1 shrink-0">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
-          <span className="relative flex h-2 w-2">
-            {isPlaying && (
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            )}
-            <span className={`relative inline-flex rounded-full h-2 w-2 ${isPlaying ? 'bg-red-500' : 'bg-slate-500'}`}></span>
-          </span>
-          <span className="font-semibold">{isPlaying ? 'EN VIVO' : 'RADIO EN ESPERA'}</span>
-        </div>
-      </div>
+    <div className="min-h-[calc(100dvh-64px)] bg-cai-gradient flex flex-col items-center justify-center px-4 py-4 pb-28 select-none overflow-y-auto">
+      <div className="w-full max-w-sm flex flex-col items-center justify-center my-auto">
+        {/* Animated Disc / Artwork (Responsive for compact screens) */}
+        <div className="relative w-44 h-44 sm:w-56 sm:h-56 flex items-center justify-center">
+          {/* Subtle outer glow / shadow */}
+          <div className="absolute inset-2 rounded-full bg-blue-500/10 blur-xl" />
 
-      {/* Disco central / Carátula giratoria */}
-      <div className="my-auto py-4 flex flex-col items-center shrink-0">
-        <div className="relative">
-          {isPlaying && (
-            <div className="absolute inset-0 rounded-full border border-amber-400/20 animate-ping pointer-events-none scale-125" />
-          )}
-
-          <div 
-            className={`w-48 h-48 sm:w-56 sm:h-56 rounded-full p-2 bg-gradient-to-tr from-amber-500/30 via-slate-800 to-amber-300/10 shadow-2xl shadow-black/80 flex items-center justify-center transition-transform duration-1000 ${
-              isPlaying ? 'animate-[spin_12s_linear_infinite]' : ''
+          {/* Disc Container with smooth rotation when playing */}
+          <div
+            className={`relative w-40 h-40 sm:w-52 sm:h-52 rounded-full overflow-hidden shadow-2xl border-4 border-white transition-transform duration-700 ${
+              isPlaying ? 'animate-[spin_20s_linear_infinite]' : ''
             }`}
           >
-            <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 bg-slate-950 flex items-center justify-center relative">
-              <img 
-                src="/ios/icons/icon-512.png" 
-                alt="Radio Casa de Adoración" 
-                className="w-full h-full object-cover opacity-90"
-              />
-              <div className="absolute w-10 h-10 rounded-full bg-slate-900 border-2 border-amber-400/50 shadow-inner flex items-center justify-center">
-                <RadioIcon className="w-4 h-4 text-amber-400" />
-              </div>
+            <img
+              src="/ios/apple-touch-icon.png"
+              alt="Casa de Adoración INT Radio"
+              className="w-full h-full object-cover"
+            />
+            {/* Center disc hole / vinyl look */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/95 shadow-inner border border-slate-200" />
             </div>
           </div>
         </div>
 
-        {/* Título de la emisora */}
-        <div className="mt-5">
-          <h2 className="text-xl font-bold tracking-tight text-white flex items-center justify-center gap-1.5">
-            Casa de Adoración <Sparkles className="w-4 h-4 text-amber-400" />
+        {/* Info matching Android Song Info */}
+        <div className="mt-4 sm:mt-6 text-center px-4">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-[#0D47A1] tracking-tight">
+            Casa de Adoración INT
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">Transmisión Oficial 24/7</p>
+          <p className="mt-1 text-sm font-semibold transition-colors duration-300">
+            {isBuffering ? (
+              <span className="text-amber-600 font-medium">Conectando...</span>
+            ) : isPlaying ? (
+              <span className="text-[#1976D2] flex items-center justify-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                Transmisión en Vivo
+              </span>
+            ) : (
+              <span className="text-gray-500 font-medium">Radio en Pausa</span>
+            )}
+          </p>
         </div>
-      </div>
 
-      {/* Controles de Reproducción */}
-      <div className="w-full max-w-xs space-y-4 pb-6 shrink-0">
-        <div className="flex items-center justify-center">
+        {/* Play / Pause Button matching Android 80dp Circle button */}
+        <div className="mt-6 sm:mt-8 relative flex items-center justify-center">
+          {isPlaying && (
+            <div className="absolute w-20 h-20 rounded-full bg-[#0D47A1]/20 animate-ping pointer-events-none" />
+          )}
+
           <button
             onClick={togglePlay}
             disabled={isBuffering}
-            className="w-18 h-18 rounded-full gold-gradient text-black flex items-center justify-center shadow-xl shadow-amber-500/25 active:scale-95 transition-all disabled:opacity-50"
+            className={`relative w-18 h-18 sm:w-20 sm:h-20 rounded-full flex items-center justify-center shadow-xl active:scale-95 transition-all cursor-pointer ${
+              isPlaying ? 'bg-[#0D47A1]' : 'bg-[#37474F]'
+            }`}
+            aria-label={isPlaying ? 'Pausar radio' : 'Reproducir radio'}
           >
             {isBuffering ? (
-              <div className="w-7 h-7 border-3 border-black border-t-transparent rounded-full animate-spin" />
+              <Loader2 className="w-8 h-8 text-white animate-spin" />
             ) : isPlaying ? (
-              <Pause className="w-8 h-8 fill-current" />
+              <Pause className="w-9 h-9 text-white fill-white" />
             ) : (
-              <Play className="w-8 h-8 fill-current translate-x-0.5" />
+              <Play className="w-9 h-9 text-white fill-white ml-1" />
             )}
           </button>
-        </div>
-
-        {/* Control de Volumen */}
-        <div className="glass-ios rounded-2xl px-4 py-2 flex items-center gap-3">
-          <Volume2 className="w-4 h-4 text-slate-400 shrink-0" />
-          <input 
-            type="range" 
-            min="0" 
-            max="1" 
-            step="0.05"
-            value={volume}
-            onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="w-full accent-amber-400 cursor-pointer h-1.5 bg-slate-700 rounded-lg appearance-none"
-          />
         </div>
       </div>
     </div>

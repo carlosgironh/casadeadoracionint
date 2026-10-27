@@ -6,27 +6,45 @@ import LoginPage from './pages/LoginPage';
 import RegistroPage from './pages/RegistroPage';
 import AppLayout from './components/AppLayout';
 
-function AuthenticatedApp() {
+function MainAppFlow() {
   const { user, loading } = useAuth();
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [screen, setScreen] = useState<'main' | 'login' | 'register'>('main');
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center">
+        <div className="w-10 h-10 border-3 border-[#00796B] border-t-transparent rounded-full animate-spin" />
+        <p className="mt-4 text-sm font-semibold text-[#00796B]">Cargando Casa de Adoración...</p>
       </div>
     );
   }
 
-  if (!user) {
-    return authMode === 'login' ? (
-      <LoginPage onSwitchToRegister={() => setAuthMode('register')} />
-    ) : (
-      <RegistroPage onSwitchToLogin={() => setAuthMode('login')} />
+  // If user is not logged in and chose to enter the leader portal
+  if (!user && screen === 'login') {
+    return (
+      <LoginPage
+        onBackClick={() => setScreen('main')}
+        onRegisterClick={() => setScreen('register')}
+        onLoginSuccess={() => setScreen('main')}
+      />
     );
   }
 
-  return <AppLayout />;
+  if (!user && screen === 'register') {
+    return (
+      <RegistroPage
+        onBackClick={() => setScreen('login')}
+        onSwitchToLogin={() => setScreen('login')}
+      />
+    );
+  }
+
+  // Main navigation (accessible to all, showing 2 tabs unauthenticated, 5 tabs authenticated)
+  return (
+    <AppLayout
+      onLoginClick={() => setScreen('login')}
+    />
+  );
 }
 
 export default function App() {
@@ -34,10 +52,9 @@ export default function App() {
     <Gatekeeper>
       <AuthProvider>
         <RadioProvider>
-          <AuthenticatedApp />
+          <MainAppFlow />
         </RadioProvider>
       </AuthProvider>
     </Gatekeeper>
   );
 }
-

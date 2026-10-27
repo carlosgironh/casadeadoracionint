@@ -14,40 +14,34 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 export interface UsuarioProfile {
   id: string;
-  nombre: string;
-  email: string;
-  rol?: string;
-  aprobado?: boolean;
+  nombre_completo?: string;
+  nombre?: string;
+  email?: string;
+  username?: string;
+  cedula?: string;
+  whatsapp?: string;
   telefono?: string;
-  celula_id?: string;
-  red_id?: string;
+  direccion?: string;
+  rol?: string;
+  nivel?: number;
+  pendiente_aprobacion?: boolean;
+  conyuge_id?: string;
+  equipo_id?: string;
+  equipo_lider_id?: string;
+  red_asignada_id?: string;
   created_at?: string;
 }
 
 export interface CelulaItem {
   id: string;
-  nombre: string;
-  codigo?: string;
-  red_id?: string;
-  lider_id?: string;
+  zona?: string;
+  nombre?: string;
+  direccion?: string;
+  categoria?: string;
   dia_reunion?: string;
   hora_reunion?: string;
-}
-
-export interface InformeCelula {
-  id?: string;
-  celula_id: string;
-  lider_id: string;
-  fecha_reunion: string;
-  asistentes_miembros: number;
-  asistentes_visitas: number;
-  conversiones: number;
-  reconciliaciones: number;
-  ofrenda_monto: number;
-  observaciones?: string;
-  evidencia_url?: string;
-  estado?: 'pendiente' | 'aprobado' | 'rechazado';
-  created_at?: string;
+  lider_id?: string;
+  colider_id?: string;
 }
 
 export interface AnuncioItem {
@@ -56,26 +50,15 @@ export interface AnuncioItem {
   contenido: string;
   imagen_url?: string;
   fecha?: string;
-  destacado?: boolean;
   created_at?: string;
 }
 
 export interface BosquejoItem {
   id: string;
   titulo: string;
-  tema?: string;
-  versiculo_clave?: string;
-  contenido: string;
+  tipo?: string;
+  versiculo_base?: string;
+  contenido?: string;
   archivo_url?: string;
-  fecha?: string;
-  created_at?: string;
-}
-
-export interface AsistenteItem {
-  id: string;
-  nombre: string;
-  telefono?: string;
-  tipo?: 'miembro' | 'visita' | 'lider';
-  celula_id?: string;
   created_at?: string;
 }

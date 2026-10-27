@@ -1,28 +1,30 @@
+import { Radio, Megaphone, Users, BookOpen, ClipboardList } from 'lucide-react';
 
-import { Radio, ClipboardList, Users, BookOpen, User } from 'lucide-react';
-import { useRadio } from '../contexts/RadioContext';
-
-export type TabType = 'radio' | 'celugrama' | 'discipulos' | 'recursos' | 'perfil';
+export type TabType = 'radio' | 'anuncios' | 'discipulos' | 'bosquejos' | 'celugrama';
 
 interface CupertinoTabBarProps {
   activeTab: TabType;
-  onChangeTab: (tab: TabType) => void;
+  onTabChange: (tab: TabType) => void;
+  isLoggedIn: boolean;
 }
 
-export default function CupertinoTabBar({ activeTab, onChangeTab }: CupertinoTabBarProps) {
-  const { isPlaying } = useRadio();
-
-  const tabs: { id: TabType; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-    { id: 'radio', label: 'Radio', icon: Radio },
-    { id: 'celugrama', label: 'Celugrama', icon: ClipboardList },
-    { id: 'discipulos', label: 'Discípulos', icon: Users },
-    { id: 'recursos', label: 'Recursos', icon: BookOpen },
-    { id: 'perfil', label: 'Perfil', icon: User },
-  ];
+export default function CupertinoTabBar({ activeTab, onTabChange, isLoggedIn }: CupertinoTabBarProps) {
+  const tabs: { id: TabType; label: string; icon: React.ComponentType<{ className?: string }> }[] = isLoggedIn
+    ? [
+        { id: 'radio', label: 'Radio', icon: Radio },
+        { id: 'anuncios', label: 'Anuncios', icon: Megaphone },
+        { id: 'discipulos', label: 'Discípulos', icon: Users },
+        { id: 'bosquejos', label: 'Bosquejos', icon: BookOpen },
+        { id: 'celugrama', label: 'Celugrama', icon: ClipboardList }
+      ]
+    : [
+        { id: 'radio', label: 'Radio', icon: Radio },
+        { id: 'anuncios', label: 'Anuncios', icon: Megaphone }
+      ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 glass-nav pb-safe pt-2">
-      <div className="flex items-center justify-around max-w-lg mx-auto px-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] pb-safe select-none">
+      <div className="h-16 max-w-md mx-auto flex items-center justify-around px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -30,18 +32,23 @@ export default function CupertinoTabBar({ activeTab, onChangeTab }: CupertinoTab
           return (
             <button
               key={tab.id}
-              onClick={() => onChangeTab(tab.id)}
-              className={`flex-1 py-1 flex flex-col items-center justify-center relative transition-all active:scale-90 ${
-                isActive ? 'text-amber-400' : 'text-slate-400 hover:text-slate-200'
-              }`}
+              onClick={() => onTabChange(tab.id)}
+              className="flex-1 flex flex-col items-center justify-center py-1 transition-all group cursor-pointer"
             >
-              <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
-                {tab.id === 'radio' && isPlaying && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                )}
+              <div
+                className={`flex items-center justify-center transition-all ${
+                  isActive
+                    ? 'bg-[#E0F2F1] text-[#00796B] px-4 py-1 rounded-full'
+                    : 'text-gray-500 group-active:scale-95'
+                }`}
+              >
+                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-105' : ''}`} />
               </div>
-              <span className={`text-[10px] mt-1 font-medium tracking-tight ${isActive ? 'font-bold' : ''}`}>
+              <span
+                className={`text-[11px] mt-0.5 tracking-tight transition-colors ${
+                  isActive ? 'font-bold text-[#00796B]' : 'font-medium text-gray-500'
+                }`}
+              >
                 {tab.label}
               </span>
             </button>
@@ -51,4 +58,3 @@ export default function CupertinoTabBar({ activeTab, onChangeTab }: CupertinoTab
     </nav>
   );
 }
-
